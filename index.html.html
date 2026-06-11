@@ -1,0 +1,1659 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>🎳 with 볼링 클럽</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   디자인 변수
+═══════════════════════════════════════ */
+:root {
+  --bg:  #e8e4df;
+  --bg2: #ede9e4;
+  --nm-out: 6px 6px 14px #c6c2bd, -6px -6px 14px #ffffff;
+  --nm-in:  inset 4px 4px 10px #c6c2bd, inset -4px -4px 10px #ffffff;
+  --nm-btn: 4px 4px 10px #c6c2bd, -4px -4px 10px #ffffff;
+  --nm-press: inset 3px 3px 8px #c6c2bd, inset -3px -3px 8px #ffffff;
+  --sage:  #7fa898;
+  --sage4: #e0efec;
+  --lav:   #9b90c2;
+  --lav4:  #eceaf6;
+  --pink:  #e88fa0;
+  --pk2:   #f0b3bf;
+  --amb:   #d4a04a;
+  --t1: #3d3a36;
+  --t2: #7a7570;
+  --t3: #a09a95;
+  --bd: rgba(160,154,149,.18);
+  --r:  18px;
+  --rs: 12px;
+  --f:  'Noto Sans KR', sans-serif;
+  --fm: 'DM Mono', monospace;
+}
+
+/* ═══════════════════════════════════════
+   기본 초기화
+═══════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--f);
+  background: var(--bg);
+  color: var(--t1);
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-size: 13px;
+  -webkit-tap-highlight-color: transparent;
+}
+#앱전체 { max-width: 980px; margin: 0 auto; padding: 16px 14px 90px; }
+
+/* ═══════════════════════════════════════
+   최초 설정 화면 (GAS URL 입력)
+═══════════════════════════════════════ */
+#설정화면 {
+  position: fixed; inset: 0;
+  background: rgba(80,76,72,.65);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  z-index: 600;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+}
+#설정카드 {
+  background: var(--bg2);
+  border-radius: var(--r);
+  box-shadow: 12px 12px 32px #bfbbb6, -12px -12px 32px #fff;
+  padding: 28px 26px;
+  max-width: 500px; width: 100%;
+  max-height: 92vh; overflow-y: auto;
+  animation: 팝업 .3s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes 팝업 {
+  from { opacity:0; transform:scale(.82); }
+  to   { opacity:1; transform:scale(1); }
+}
+.설정-제목 {
+  font-size: 21px; font-weight: 900; color: var(--t1);
+  margin-bottom: 6px;
+  display: flex; align-items: center; gap: 8px;
+}
+.설정-안내 {
+  font-size: 11px; color: var(--t2); line-height: 1.85;
+  background: rgba(127,168,152,.10);
+  padding: 12px 14px; border-radius: var(--rs);
+  border-left: 3px solid var(--sage);
+  margin-bottom: 20px;
+}
+.설정-라벨 {
+  font-size: 11px; font-weight: 700; color: var(--t2);
+  display: block; margin-bottom: 6px;
+}
+.설정-입력 {
+  width: 100%; border: none; background: transparent; outline: none;
+  font-family: var(--fm); font-size: 11px; color: var(--t1);
+  padding: 10px 14px; border-radius: var(--rs);
+  box-shadow: var(--nm-in); margin-bottom: 12px;
+  transition: box-shadow .15s;
+}
+.설정-입력:focus { box-shadow: 0 0 0 2px var(--sage), var(--nm-in); }
+.설정-입력::placeholder { color: var(--t3); font-family: var(--f); font-size: 11px; }
+.설정-버튼 {
+  width: 100%; padding: 13px; border-radius: var(--rs);
+  background: var(--sage); color: #fff;
+  font-size: 13px; font-weight: 700; border: none; cursor: pointer;
+  font-family: var(--f);
+  box-shadow: 4px 4px 10px rgba(127,168,152,.4), -2px -2px 8px rgba(255,255,255,.6);
+  transition: all .2s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  margin-bottom: 10px;
+}
+.설정-버튼:hover  { filter: brightness(1.06); transform: translateY(-1px); }
+.설정-버튼:active { transform: scale(.97); }
+.설정-버튼.회색 { background: var(--t2); }
+.설정-구분선 {
+  text-align: center; font-size: 11px; color: var(--t3);
+  margin: 12px 0; position: relative;
+}
+.설정-구분선::before,
+.설정-구분선::after {
+  content: ''; position: absolute; top: 50%;
+  width: 43%; height: 1px; background: var(--bd);
+}
+.설정-구분선::before { left: 0; }
+.설정-구분선::after  { right: 0; }
+
+/* 안내 단계 박스 */
+.단계박스 { margin-top: 20px; }
+.단계박스-제목 {
+  font-size: 12px; font-weight: 700; color: var(--t1);
+  margin-bottom: 12px;
+  display: flex; align-items: center; gap: 6px;
+}
+.단계 {
+  display: flex; gap: 10px;
+  padding: 11px 13px; border-radius: var(--rs);
+  background: rgba(127,168,152,.06);
+  margin-bottom: 8px; font-size: 11px; color: var(--t2); line-height: 1.75;
+}
+.단계:last-child { margin-bottom: 0; }
+.단계-번호 {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--sage); color: #fff;
+  font-size: 10px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.단계-내용 b { color: var(--t1); font-weight: 700; }
+.코드강조 {
+  display: inline-block;
+  background: rgba(127,168,152,.2);
+  padding: 1px 7px; border-radius: 4px;
+  font-family: var(--fm); font-size: 10px;
+  color: var(--sage); font-weight: 700;
+}
+.중요강조 {
+  display: inline-block;
+  background: rgba(232,143,160,.15);
+  padding: 1px 7px; border-radius: 4px;
+  color: var(--pink); font-weight: 700;
+}
+.코드박스 {
+  background: rgba(0,0,0,.07); border-radius: 8px;
+  padding: 10px 13px; font-family: var(--fm); font-size: 9px;
+  color: var(--t2); line-height: 1.9; margin: 10px 0;
+  word-break: break-all; max-height: 140px; overflow-y: auto;
+  white-space: pre-wrap;
+}
+.코드복사버튼 {
+  width: 100%; padding: 9px; border-radius: var(--rs);
+  box-shadow: var(--nm-btn); background: var(--bg2); border: none;
+  font-size: 11px; font-weight: 700; color: var(--sage); cursor: pointer;
+  font-family: var(--f);
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  margin-bottom: 16px; transition: box-shadow .15s;
+}
+.코드복사버튼:active { box-shadow: var(--nm-press); }
+
+/* ═══════════════════════════════════════
+   헤더
+═══════════════════════════════════════ */
+.헤더 {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 22px; border-radius: var(--r);
+  box-shadow: var(--nm-out); background: var(--bg2);
+  margin-bottom: 14px; flex-wrap: wrap; gap: 10px;
+}
+.헤더-왼쪽 { display: flex; align-items: center; gap: 12px; }
+.헤더-아이콘 {
+  width: 48px; height: 48px; border-radius: 13px;
+  box-shadow: var(--nm-btn); background: var(--bg2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; flex-shrink: 0;
+}
+.클럽명입력 {
+  border: none; background: transparent; outline: none;
+  font-family: var(--f); font-size: 15px; font-weight: 400;
+  color: var(--t3); width: 260px; max-width: 100%;
+  padding: 4px 0; border-bottom: 1.5px dashed rgba(160,154,149,.4);
+  transition: all .25s; caret-color: var(--sage);
+}
+.클럽명입력::placeholder { color: var(--t3); font-size: 13px; }
+.클럽명입력:focus { border-bottom-color: var(--sage); }
+.클럽명입력.입력됨 { font-size: 20px; font-weight: 900; color: var(--t1); border-bottom-color: transparent; }
+.헤더-부제 { font-size: 10px; color: var(--t3); margin-top: 2px; }
+.헤더-오른쪽 { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.동기화표시 {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 13px; border-radius: 30px;
+  box-shadow: var(--nm-btn); background: var(--bg2);
+  font-size: 10px; color: var(--t2); cursor: pointer; user-select: none;
+}
+.동기화표시:active { box-shadow: var(--nm-press); }
+.동기화점 { width: 7px; height: 7px; border-radius: 50%; background: var(--t3); flex-shrink: 0; }
+.동기화점.연결됨  { background: var(--sage); animation: 깜빡 2s infinite; }
+.동기화점.오류    { background: var(--pink); }
+.동기화점.로딩중  { background: var(--amb); animation: 깜빡 .7s infinite; }
+@keyframes 깜빡 { 0%,100%{opacity:1} 50%{opacity:.35} }
+.아이콘버튼 {
+  width: 36px; height: 36px; border-radius: 10px;
+  box-shadow: var(--nm-btn); background: var(--bg2); border: none;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; cursor: pointer; color: var(--t2);
+}
+.아이콘버튼:active { box-shadow: var(--nm-press); transform: scale(.94); }
+.설정버튼 {
+  padding: 7px 13px; border-radius: 30px;
+  box-shadow: var(--nm-btn); background: var(--bg2); border: none;
+  font-size: 10px; font-weight: 600; color: var(--t2);
+  cursor: pointer; font-family: var(--f);
+}
+.설정버튼:active { box-shadow: var(--nm-press); }
+
+/* ═══════════════════════════════════════
+   공유 배너
+═══════════════════════════════════════ */
+.공유배너 {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 16px; border-radius: var(--rs);
+  box-shadow: var(--nm-in); background: var(--bg2);
+  margin-bottom: 14px; flex-wrap: wrap;
+}
+.공유URL {
+  flex: 1; font-family: var(--fm); font-size: 10px;
+  color: var(--sage); word-break: break-all; min-width: 100px;
+}
+.URL복사버튼 {
+  padding: 6px 14px; border-radius: 20px;
+  box-shadow: var(--nm-btn); background: var(--bg2); border: none;
+  font-size: 10px; font-weight: 700; color: var(--sage);
+  cursor: pointer; font-family: var(--f); white-space: nowrap;
+}
+.URL복사버튼:active { box-shadow: var(--nm-press); }
+
+/* ═══════════════════════════════════════
+   시계 영역
+═══════════════════════════════════════ */
+.시계행 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+@media(max-width:500px){ .시계행 { grid-template-columns: 1fr; } }
+.아날로그시계카드 {
+  padding: 18px; border-radius: var(--r);
+  box-shadow: var(--nm-out); background: var(--bg2);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+}
+.인사말 { font-size: 13px; font-weight: 600; color: var(--t1); align-self: flex-start; }
+.인사말 span { color: var(--sage); font-weight: 700; }
+.부인사말 { font-size: 10px; color: var(--t3); align-self: flex-start; margin-bottom: 10px; }
+.시계판 {
+  width: 98px; height: 98px; border-radius: 50%;
+  box-shadow: var(--nm-out); background: var(--bg2);
+  position: relative; display: flex; align-items: center; justify-content: center;
+}
+.시계숫자 {
+  position: absolute; font-size: 8px; font-weight: 600;
+  color: var(--t3); font-family: var(--fm);
+}
+.시계숫자.n12 { top:6px; left:50%; transform:translateX(-50%); }
+.시계숫자.n3  { right:7px; top:50%; transform:translateY(-50%); }
+.시계숫자.n6  { bottom:6px; left:50%; transform:translateX(-50%); }
+.시계숫자.n9  { left:7px; top:50%; transform:translateY(-50%); }
+.바늘 { position:absolute; bottom:50%; left:50%; transform-origin:bottom center; border-radius:3px; }
+.바늘.시침 { width:3px; height:25px; background:var(--t1); margin-left:-1.5px; }
+.바늘.분침 { width:2px; height:35px; background:var(--t2); margin-left:-1px; }
+.바늘.초침 { width:1.5px; height:39px; background:var(--pink); margin-left:-.75px; }
+.중심점 {
+  width:7px; height:7px; border-radius:50%; background:var(--pink);
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); z-index:5;
+}
+.디지털시계카드 {
+  padding: 18px; border-radius: var(--r);
+  box-shadow: var(--nm-out); background: var(--bg2);
+  display: flex; flex-direction: column; justify-content: center;
+}
+.디지털시각 {
+  font-family: var(--fm); font-size: 40px; font-weight: 500; color: var(--t1);
+  padding: 10px 16px; border-radius: var(--rs);
+  box-shadow: var(--nm-in); background: var(--bg2);
+  letter-spacing: 4px; margin-bottom: 10px; text-align: center;
+}
+.요일표시 { font-size: 17px; font-weight: 700; color: var(--t1); margin-bottom: 2px; }
+.날짜표시 { font-size: 10px; color: var(--t2); font-family: var(--fm); }
+
+/* ═══════════════════════════════════════
+   연도 진행바
+═══════════════════════════════════════ */
+.연도바 {
+  padding: 12px 18px; border-radius: var(--rs);
+  box-shadow: var(--nm-in); background: var(--bg2);
+  margin-bottom: 14px; display: flex; align-items: center; gap: 12px;
+}
+.연도바-라벨 { font-size: 11px; font-weight: 600; color: var(--t2); white-space: nowrap; }
+.연도바-트랙 { flex:1; height:5px; border-radius:3px; box-shadow:var(--nm-in); overflow:hidden; }
+.연도바-채움 { height:100%; border-radius:3px; background:linear-gradient(90deg,var(--pink),var(--pk2)); transition:width 1s ease; }
+.연도바-퍼센트 { font-family:var(--fm); font-size:12px; color:var(--pink); font-weight:500; min-width:36px; text-align:right; }
+
+/* ═══════════════════════════════════════
+   대시보드 카드
+═══════════════════════════════════════ */
+.대시그리드 { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:14px; }
+@media(max-width:600px){ .대시그리드{ grid-template-columns:repeat(2,1fr); } }
+.대시카드 {
+  padding: 15px 13px; border-radius: var(--r);
+  box-shadow: var(--nm-out); background: var(--bg2);
+  transition: box-shadow .2s;
+}
+.대시카드.클릭가능 { cursor: pointer; }
+.대시카드.클릭가능:hover { box-shadow: 8px 8px 18px #bfbbb6, -8px -8px 18px #fff; }
+.대시-라벨 { font-size:8px; font-weight:700; color:var(--t3); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:8px; }
+.대시-값   { font-family:var(--fm); font-size:20px; font-weight:500; color:var(--t1); line-height:1; }
+.대시-부제 { font-size:9px; color:var(--t3); margin-top:5px; }
+.대시-바   { height:3px; border-radius:2px; box-shadow:var(--nm-in); margin-top:8px; overflow:hidden; }
+.대시-바-채움 { height:100%; border-radius:2px; background:linear-gradient(90deg,var(--pink),var(--pk2)); transition:width .8s; }
+
+/* ═══════════════════════════════════════
+   탭 네비게이션 (PC)
+═══════════════════════════════════════ */
+.탭네비 { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin-bottom:16px; }
+@media(max-width:600px){ .탭네비{ display:none; } }
+.탭버튼 {
+  padding:11px 6px; border-radius:var(--rs);
+  box-shadow:var(--nm-btn); background:var(--bg2);
+  color:var(--t2); font-size:10px; font-weight:600;
+  cursor:pointer; transition:all .2s; text-align:center;
+  display:flex; flex-direction:column; align-items:center; gap:4px;
+  border:none; font-family:var(--f);
+}
+.탭버튼:hover { box-shadow: 6px 6px 14px #bfbbb6, -6px -6px 14px #fff; }
+.탭버튼.활성 { box-shadow:var(--nm-press); color:var(--sage); background:linear-gradient(135deg,#e0f0ed,#eae6e1); }
+.탭버튼 .탭아이콘 { font-size: 17px; }
+
+/* 모바일 하단 네비 */
+.모바일네비 {
+  display: none; position:fixed; bottom:0; left:0; right:0;
+  background: rgba(237,233,228,.97);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 -3px 16px rgba(0,0,0,.07);
+  border-top: 1px solid var(--bd);
+  padding: 8px 0 max(8px, env(safe-area-inset-bottom));
+  z-index: 100;
+}
+@media(max-width:600px){ .모바일네비{ display:flex; justify-content:space-around; } }
+.모바일탭 {
+  display:flex; flex-direction:column; align-items:center; gap:2px;
+  padding:5px 8px; cursor:pointer; color:var(--t3);
+  font-size:8px; font-weight:600; border-radius:8px; font-family:var(--f);
+}
+.모바일탭 .모바일아이콘 { font-size: 20px; }
+.모바일탭.활성 { color: var(--sage); }
+
+/* ═══════════════════════════════════════
+   섹션 (탭 콘텐츠)
+═══════════════════════════════════════ */
+.섹션 { display:none; animation:나타남 .28s ease; }
+.섹션.활성 { display:block; }
+@keyframes 나타남 { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:translateY(0)} }
+
+.패널 {
+  padding:20px; border-radius:var(--r);
+  box-shadow:var(--nm-out); background:var(--bg2); margin-bottom:12px;
+}
+.패널-제목 { font-size:13px; font-weight:700; color:var(--t1); display:flex; align-items:center; gap:7px; margin-bottom:4px; }
+.패널-부제 { font-size:10px; color:var(--t3); margin-bottom:14px; line-height:1.65; }
+
+/* ═══════════════════════════════════════
+   컨셉 탭
+═══════════════════════════════════════ */
+.컨셉그리드 { display:grid; grid-template-columns:230px 1fr; gap:12px; }
+@media(max-width:700px){ .컨셉그리드{ grid-template-columns:1fr; } }
+.프로필카드 {
+  padding:20px; border-radius:var(--r);
+  box-shadow:var(--nm-out); background:var(--bg2); text-align:center;
+}
+.프로필아이콘 {
+  width:62px; height:62px; border-radius:14px;
+  box-shadow:var(--nm-out); background:var(--bg2);
+  display:flex; align-items:center; justify-content:center;
+  font-size:30px; margin:0 auto 12px;
+}
+.프로필명 { font-size:16px; font-weight:700; color:var(--t1); margin-bottom:2px; outline:none; }
+.프로필조직 { font-size:9px; color:var(--sage); font-weight:600; letter-spacing:1.5px; text-transform:uppercase; outline:none; }
+.정보목록 { margin-top:14px; }
+.정보항목 { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--bd); font-size:11px; }
+.정보항목:last-child { border-bottom:none; }
+.정보키 { color:var(--t2); }
+.정보값 { font-weight:700; color:var(--t1); outline:none; }
+.정보값.녹색 { color:var(--sage); }
+.액션버튼 {
+  width:100%; margin-top:14px; padding:11px; border-radius:var(--rs);
+  background:var(--sage); color:#fff; font-size:11px; font-weight:700;
+  border:none; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; gap:7px;
+  box-shadow:4px 4px 10px rgba(127,168,152,.4),-2px -2px 8px rgba(255,255,255,.6);
+  transition:all .2s; font-family:var(--f);
+}
+.액션버튼:hover { filter:brightness(1.06); transform:translateY(-1px); }
+.액션버튼:active { transform:scale(.96); }
+.특약카드 {
+  padding:13px 15px; border-radius:var(--rs);
+  box-shadow:var(--nm-in); background:var(--bg2);
+  margin-bottom:10px; border-left:4px solid var(--sage);
+}
+.특약카드.금색 { border-left-color:var(--amb); }
+.특약카드.보라 { border-left-color:var(--lav); }
+.특약-제목 { font-size:12px; font-weight:700; color:var(--t1); margin-bottom:6px; outline:none; }
+.특약-내용 { font-size:10px; color:var(--t2); line-height:1.75; outline:none; }
+[contenteditable]:hover { background:rgba(127,168,152,.07); border-radius:4px; }
+[contenteditable]:focus { background:rgba(127,168,152,.13); border-radius:4px; outline:none; box-shadow:0 0 0 1.5px rgba(127,168,152,.35); }
+
+/* ═══════════════════════════════════════
+   가치 탭
+═══════════════════════════════════════ */
+.가치그리드 { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+@media(max-width:560px){ .가치그리드{ grid-template-columns:1fr; } }
+.가치카드 { padding:13px; border-radius:var(--rs); box-shadow:var(--nm-in); background:var(--bg2); }
+.가치헤더 { display:flex; align-items:center; gap:7px; margin-bottom:9px; padding-bottom:8px; border-bottom:1px solid var(--bd); }
+.가치번호 {
+  width:20px; height:20px; border-radius:6px;
+  background:var(--sage4); color:var(--sage);
+  display:flex; align-items:center; justify-content:center;
+  font-size:9px; font-weight:700; flex-shrink:0;
+  box-shadow:2px 2px 4px #c6c2bd,-2px -2px 4px #fff;
+}
+.가치-원제 { font-size:9px; color:var(--sage); font-weight:600; }
+.가치-번역 { font-size:11px; font-weight:700; color:var(--t1); margin-top:1px; outline:none; }
+.가치-항목 { display:flex; gap:4px; margin-bottom:5px; font-size:10px; }
+.가치-항목:last-child { margin-bottom:0; }
+.실천 { color:var(--sage); font-weight:700; flex-shrink:0; padding-top:1px; }
+.금지 { color:var(--pink); font-weight:700; flex-shrink:0; padding-top:1px; }
+.가치-텍스트 { color:var(--t2); line-height:1.6; outline:none; }
+
+/* ═══════════════════════════════════════
+   테이블 공통
+═══════════════════════════════════════ */
+.도구모음 { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
+.도구모음-오른쪽 { display:flex; gap:7px; flex-wrap:wrap; align-items:center; }
+.알약버튼 {
+  padding:7px 14px; border-radius:30px; font-size:10px; font-weight:600;
+  border:none; cursor:pointer; display:flex; align-items:center; gap:4px;
+  box-shadow:var(--nm-btn); background:var(--bg2); color:var(--t2);
+  transition:all .15s; font-family:var(--f);
+}
+.알약버튼:active { box-shadow:var(--nm-press); }
+.알약버튼.녹색 { background:var(--sage4); color:var(--sage); }
+.알약버튼.분홍 { background:#fde8eb; color:var(--pink); }
+.평균알약 {
+  padding:6px 12px; border-radius:30px;
+  box-shadow:var(--nm-in); background:var(--bg2);
+  font-size:10px; color:var(--t2);
+}
+.평균알약 span { color:var(--sage); font-weight:700; }
+.테이블감싸기 { border-radius:var(--rs); overflow:auto; box-shadow:var(--nm-in); background:var(--bg2); }
+table { width:100%; border-collapse:collapse; font-size:11px; }
+thead tr { background:rgba(127,168,152,.07); }
+th { padding:10px 9px; font-size:8px; font-weight:700; color:var(--t3); text-transform:uppercase; letter-spacing:1.2px; white-space:nowrap; font-family:var(--f); }
+td { padding:9px 9px; border-bottom:1px solid rgba(160,154,149,.1); vertical-align:middle; }
+tbody tr:last-child td { border-bottom:none; }
+tbody tr:hover { background:rgba(127,168,152,.04); }
+td[contenteditable] { outline:none; cursor:text; border-radius:4px; transition:background .12s; }
+td[contenteditable]:hover { background:rgba(127,168,152,.1); }
+td[contenteditable]:focus { background:rgba(127,168,152,.16); box-shadow:0 0 0 1.5px rgba(127,168,152,.4); }
+.뱃지 {
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:3px 10px; border-radius:30px; font-size:9px; font-weight:700;
+  cursor:pointer; white-space:nowrap;
+  box-shadow:2px 2px 5px #c6c2bd,-2px -2px 5px #fff;
+  font-family:var(--f); user-select:none;
+}
+.뱃지.녹색 { background:var(--sage4); color:var(--sage); }
+.뱃지.빨강 { background:#fde8eb; color:var(--pink); }
+.뱃지:active { box-shadow:inset 2px 2px 4px #c6c2bd,inset -2px -2px 4px #fff; }
+.삭제버튼 {
+  width:24px; height:24px; border-radius:7px; border:none; cursor:pointer;
+  box-shadow:var(--nm-btn); background:var(--bg2); color:var(--pink); font-size:13px;
+  display:flex; align-items:center; justify-content:center;
+}
+.삭제버튼:active { box-shadow:var(--nm-press); }
+select {
+  background:var(--bg2); border:none; box-shadow:var(--nm-in);
+  color:var(--t1); font-size:10px; font-weight:600; font-family:var(--f);
+  border-radius:7px; padding:4px 8px; cursor:pointer; outline:none;
+}
+
+/* ═══════════════════════════════════════
+   가동 실적 (건별 입력)
+═══════════════════════════════════════ */
+.회원블록 { border-radius:var(--rs); box-shadow:var(--nm-in); background:var(--bg2); margin-bottom:10px; overflow:hidden; }
+.회원블록-헤더 {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:10px 14px; cursor:pointer;
+  background:rgba(127,168,152,.05); border-bottom:1px solid var(--bd);
+  user-select:none;
+}
+.회원블록-헤더:hover { background:rgba(127,168,152,.09); }
+.회원블록-이름 { font-size:12px; font-weight:700; color:var(--t1); display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.실적태그 { padding:2px 8px; border-radius:20px; font-size:9px; font-weight:700; }
+.실적태그.메트 { background:var(--sage4); color:var(--sage); }
+.실적태그.타생 { background:var(--lav4); color:var(--lav); }
+.실적태그.타손 { background:#fef3e2; color:var(--amb); }
+.실적태그.없음 { background:rgba(160,154,149,.12); color:var(--t3); }
+.회원블록-합계 { display:flex; gap:8px; align-items:center; }
+.합계금액 { font-family:var(--fm); font-size:11px; font-weight:500; }
+.화살표 { font-size:10px; color:var(--t3); transition:transform .2s; display:inline-block; }
+.화살표.열림 { transform:rotate(180deg); }
+.회원블록-내용 { padding:12px 14px; display:none; }
+.계약행 { display:grid; grid-template-columns:1fr 60px 110px 26px; gap:6px; align-items:center; margin-bottom:4px; }
+.계약입력 {
+  border:none; background:transparent; outline:none;
+  font-family:var(--f); font-size:11px; color:var(--t1);
+  padding:5px 8px; border-radius:7px; box-shadow:var(--nm-in);
+  width:100%; transition:box-shadow .15s;
+}
+.계약입력:focus { box-shadow:0 0 0 1.5px var(--sage), var(--nm-in); }
+.계약입력::placeholder { color:var(--t3); font-size:10px; }
+.계약입력.모노 { font-family:var(--fm); }
+.유형선택행 { display:flex; gap:10px; margin-bottom:8px; padding-left:2px; flex-wrap:wrap; }
+.유형선택행 label { display:flex; align-items:center; gap:3px; font-size:10px; cursor:pointer; color:var(--t2); }
+.계약추가버튼 {
+  padding:5px 12px; border-radius:20px; box-shadow:var(--nm-btn); background:var(--bg2);
+  border:none; font-size:9px; font-weight:700; cursor:pointer;
+  font-family:var(--f); margin-right:6px; margin-top:6px;
+  display:inline-flex; align-items:center; gap:3px; color:var(--sage);
+}
+.계약추가버튼:active { box-shadow:var(--nm-press); }
+.요약행 { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:14px; }
+@media(max-width:520px){ .요약행{ grid-template-columns:1fr; } }
+.요약카드 { padding:14px; border-radius:var(--rs); box-shadow:var(--nm-in); background:var(--bg2); }
+.요약-라벨 { font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:6px; font-family:var(--f); }
+.요약-라벨.메트 { color:var(--sage); }
+.요약-라벨.타생 { color:var(--lav); }
+.요약-라벨.타손 { color:var(--amb); }
+.요약-값 { font-family:var(--fm); font-size:15px; font-weight:500; color:var(--t1); }
+.요약-부제 { font-size:10px; color:var(--t3); margin-top:3px; }
+
+/* ═══════════════════════════════════════
+   장부 탭
+═══════════════════════════════════════ */
+.장부요약 { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:16px; }
+@media(max-width:520px){ .장부요약{ grid-template-columns:1fr; } }
+.장부카드 { padding:14px; border-radius:var(--rs); box-shadow:var(--nm-in); background:var(--bg2); }
+.장부-라벨 { font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:4px; font-family:var(--f); }
+.장부-라벨.수입 { color:var(--sage); }
+.장부-라벨.지출 { color:var(--pink); }
+.장부-라벨.잔액 { color:var(--lav); }
+.장부-값 { font-family:var(--fm); font-size:17px; font-weight:500; color:var(--t1); }
+.장부-부제 { font-size:9px; color:var(--t3); margin-top:2px; }
+
+.소제목 { font-size:12px; font-weight:700; color:var(--t1); margin-bottom:3px; }
+.소부제 { font-size:10px; color:var(--t3); margin-bottom:11px; line-height:1.6; }
+.회비셀 {
+  padding:7px 4px; cursor:pointer; font-size:10px; font-weight:700;
+  transition:all .12s; user-select:none; text-align:center;
+  border-right:1px solid rgba(160,154,149,.07); font-family:var(--fm);
+}
+.회비셀.완납 { color:var(--sage); background:rgba(127,168,152,.1); }
+.회비셀.미납 { color:var(--pink); background:rgba(232,143,160,.05); }
+.회비셀:hover { filter:brightness(1.15); transform:scale(1.1); }
+.회비합계 { font-family:var(--fm); font-size:10px; color:var(--lav); font-weight:500; padding:7px 9px; background:rgba(155,144,194,.06); }
+.이름셀 { font-weight:600; color:var(--t1); padding:9px 11px; font-size:11px; white-space:nowrap; min-width:65px; }
+.월헤더 { font-size:8px; padding:9px 3px; color:var(--t3); font-weight:700; }
+.비고셀 { font-size:10px; color:var(--t3); font-style:italic; }
+
+/* ═══════════════════════════════════════
+   기타 유틸
+═══════════════════════════════════════ */
+.행나타남 { animation:행슬라이드 .22s ease forwards; }
+@keyframes 행슬라이드 { from{opacity:0;transform:translateX(-4px)} to{opacity:1;transform:translateX(0)} }
+.토스트 {
+  position:fixed; bottom:80px; left:50%; transform:translateX(-50%);
+  background:var(--t1); color:#fff; padding:9px 20px;
+  border-radius:30px; font-size:11px; font-weight:600;
+  opacity:0; transition:opacity .3s; pointer-events:none; z-index:999; white-space:nowrap;
+}
+.토스트.보임 { opacity:1; }
+
+@media print {
+  #설정화면, .모바일네비, .탭네비, .도구모음 .알약버튼,
+  .삭제버튼, .공유배너, .헤더-오른쪽, .액션버튼, .계약추가버튼 { display:none!important; }
+  body { background:#fff!important; color:#2d2a27!important; }
+  .섹션 { display:block!important; margin-bottom:20px!important; }
+  .패널,.프로필카드,.특약카드,.가치카드,.요약카드,.장부카드,.테이블감싸기,.대시카드,.회원블록 {
+    background:#fff!important; box-shadow:none!important; border:1px solid #ddd!important;
+  }
+  #앱전체 { padding:0; max-width:100%; }
+  @page { size:A4; margin:12mm; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+  최초 설정 화면
+══════════════════════════════════════════ -->
+<div id="설정화면">
+  <div id="설정카드">
+    <div class="설정-제목">🎳 with 볼링 클럽 홈페이지</div>
+    <div class="설정-안내">
+      <b>구글 앱스 스크립트(Google Apps Script) 웹앱 URL</b>을 연결하면<br>
+      링크 하나로 <b>모든 회원이 실시간으로 같은 데이터</b>를 공유할 수 있어요.<br>
+      설정은 <b>딱 한 번만</b> 하면 됩니다!
+    </div>
+
+    <label class="설정-라벨">▼ 앱스 스크립트 웹앱 URL 붙여넣기</label>
+    <input class="설정-입력" id="GAS주소입력"
+      type="url" placeholder="https://script.google.com/macros/s/…/exec">
+    <button class="설정-버튼" onclick="GAS연결()">🔗 연결하고 시작하기</button>
+
+    <div class="설정-구분선">또는</div>
+    <button class="설정-버튼 회색" onclick="로컬모드시작()">💾 공유 없이 내 기기에만 저장하기</button>
+
+    <div class="단계박스">
+      <div class="단계박스-제목">📋 앱스 스크립트 URL 만드는 방법 (약 5분)</div>
+
+      <div class="단계">
+        <span class="단계-번호">1</span>
+        <div class="단계-내용">
+          새 탭에서 <b>script.google.com</b> 접속 →
+          <b>새 프로젝트</b> 클릭 →
+          편집창 기존 코드 전체 선택 <span class="코드강조">Ctrl+A</span> 후 삭제
+        </div>
+      </div>
+
+      <div class="단계">
+        <span class="단계-번호">2</span>
+        <div class="단계-내용">
+          아래 <b>코드 복사하기</b> 버튼 클릭 → 빈 편집창에 붙여넣기 <span class="코드강조">Ctrl+V</span>
+          → 저장 <span class="코드강조">Ctrl+S</span> → 프로젝트 이름: <b>볼링동호회</b>
+        </div>
+      </div>
+
+      <div class="코드박스" id="코드미리보기">불러오는 중...</div>
+      <button class="코드복사버튼" onclick="코드복사()">📋 위 코드 전체 복사하기</button>
+
+      <div class="단계">
+        <span class="단계-번호">3</span>
+        <div class="단계-내용">
+          오른쪽 상단 <b>배포</b> 버튼 클릭 →
+          <b>새 배포</b> → ⚙️ 아이콘 → <b>웹 앱</b> 선택
+        </div>
+      </div>
+
+      <div class="단계">
+        <span class="단계-번호">4</span>
+        <div class="단계-내용">
+          • 다음 사용자로 실행: <b>나</b><br>
+          • 액세스 권한: <span class="중요강조">모든 사용자</span> ← 반드시!<br>
+          → <b>배포</b> → 팝업에서 <b>액세스 승인</b> → 내 계정 선택 →
+          <b>고급</b> → <b>볼링동호회(으)로 이동</b> → <b>허용</b>
+        </div>
+      </div>
+
+      <div class="단계">
+        <span class="단계-번호">5</span>
+        <div class="단계-내용">
+          배포 완료 화면에서 <b>웹 앱 URL</b> 복사
+          <span class="코드강조">https://script.google.com/macros/s/…/exec</span>
+          → 위 입력창에 붙여넣기 → <b>연결하고 시작하기</b>!
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+  메인 앱
+══════════════════════════════════════════ -->
+<div id="앱전체">
+
+  <!-- 헤더 -->
+  <header class="헤더">
+    <div class="헤더-왼쪽">
+      <div class="헤더-아이콘">🎳</div>
+      <div>
+        <input class="클럽명입력" id="클럽명"
+          type="text" placeholder="동호회 이름을 입력하세요"
+          maxlength="30" autocomplete="off"
+          oninput="클럽명변경(this)" onblur="저장예약()">
+        <div class="헤더-부제">메트라이프금융서비스 볼링 동호회</div>
+      </div>
+    </div>
+    <div class="헤더-오른쪽">
+      <div class="동기화표시" onclick="강제새로고침()">
+        <span class="동기화점" id="동기화점"></span>
+        <span id="동기화텍스트">연결 중…</span>
+      </div>
+      <button class="설정버튼" onclick="설정화면보기()">⚙️ 설정</button>
+      <button class="아이콘버튼" onclick="window.print()">🖨️</button>
+    </div>
+  </header>
+
+  <!-- 공유 배너 -->
+  <div class="공유배너">
+    <span style="font-size:15px">🔗</span>
+    <span style="font-size:10px;color:var(--t2);font-weight:600;white-space:nowrap">
+      이 링크를 카카오톡 단체방에 공유하면 모든 회원이 같은 화면을 봅니다
+    </span>
+    <span class="공유URL" id="공유주소"></span>
+    <button class="URL복사버튼" onclick="주소복사()">📋 링크 복사</button>
+  </div>
+
+  <!-- 시계 -->
+  <div class="시계행">
+    <div class="아날로그시계카드">
+      <div class="인사말">안녕하세요, <span id="현재월">6월</span>입니다</div>
+      <div class="부인사말">오늘도 스트라이크 하는 하루 되세요!</div>
+      <div class="시계판">
+        <span class="시계숫자 n12">12</span>
+        <span class="시계숫자 n3">3</span>
+        <span class="시계숫자 n6">6</span>
+        <span class="시계숫자 n9">9</span>
+        <div class="바늘 시침" id="시침"></div>
+        <div class="바늘 분침" id="분침"></div>
+        <div class="바늘 초침" id="초침"></div>
+        <div class="중심점"></div>
+      </div>
+    </div>
+    <div class="디지털시계카드">
+      <div class="디지털시각" id="디지털시각">00:00</div>
+      <div class="요일표시" id="요일"></div>
+      <div class="날짜표시" id="날짜"></div>
+    </div>
+  </div>
+
+  <!-- 연도 진행바 -->
+  <div class="연도바">
+    <div class="연도바-라벨">올해가 얼마나 지났을까요?</div>
+    <div class="연도바-트랙">
+      <div class="연도바-채움" id="연도채움" style="width:0%"></div>
+    </div>
+    <div class="연도바-퍼센트" id="연도퍼센트">0%</div>
+  </div>
+
+  <!-- 대시보드 -->
+  <div class="대시그리드">
+    <div class="대시카드">
+      <div class="대시-라벨">회원 수</div>
+      <div class="대시-값" id="대시-회원수">0</div>
+      <div class="대시-부제">등록 FP 총원</div>
+    </div>
+    <div class="대시카드">
+      <div class="대시-라벨">평균 에버리지</div>
+      <div class="대시-값" id="대시-에버리지">0.0</div>
+      <div class="대시-부제">점</div>
+    </div>
+    <div class="대시카드 클릭가능" onclick="탭이동('탭-가동실적')">
+      <div class="대시-라벨">당월 가동률</div>
+      <div class="대시-값" id="대시-가동률">0%</div>
+      <div class="대시-부제" id="대시-가동명수">0명 가동</div>
+      <div class="대시-바"><div class="대시-바-채움" id="대시-가동바" style="width:0%"></div></div>
+    </div>
+    <div class="대시카드 클릭가능" onclick="탭이동('탭-장부')">
+      <div class="대시-라벨">동호회 잔액</div>
+      <div class="대시-값" id="대시-잔액" style="font-size:15px">₩0</div>
+      <div class="대시-부제">회비 통장</div>
+    </div>
+  </div>
+
+  <!-- PC 탭 -->
+  <nav class="탭네비">
+    <button class="탭버튼 활성" id="버튼-탭-컨셉" onclick="탭이동('탭-컨셉')">
+      <span class="탭아이콘">✨</span>클럽 컨셉 &amp; 특약
+    </button>
+    <button class="탭버튼" id="버튼-탭-가치" onclick="탭이동('탭-가치')">
+      <span class="탭아이콘">🏆</span>6대 핵심 가치
+    </button>
+    <button class="탭버튼" id="버튼-탭-명단" onclick="탭이동('탭-명단')">
+      <span class="탭아이콘">👥</span>회원 명단 (<span id="탭-회원수">0</span>명)
+    </button>
+    <button class="탭버튼" id="버튼-탭-가동실적" onclick="탭이동('탭-가동실적')">
+      <span class="탭아이콘">📈</span>가동 실적 현황
+    </button>
+    <button class="탭버튼" id="버튼-탭-장부" onclick="탭이동('탭-장부')">
+      <span class="탭아이콘">💰</span>회비 &amp; 장부
+    </button>
+  </nav>
+
+  <!-- ───────────────────────────────
+    탭1: 클럽 컨셉
+  ─────────────────────────────── -->
+  <div id="탭-컨셉" class="섹션 활성">
+    <div class="컨셉그리드">
+      <div class="프로필카드">
+        <div class="프로필아이콘">🎳</div>
+        <div class="프로필명" contenteditable="true" onblur="저장예약()">with 볼링 클럽</div>
+        <div class="프로필조직" contenteditable="true" onblur="저장예약()">MetLife Financial Services</div>
+        <div class="정보목록">
+          <div class="정보항목">
+            <span class="정보키">미션</span>
+            <span class="정보값" contenteditable="true" onblur="저장예약()">에버리지 동반 성장</span>
+          </div>
+          <div class="정보항목">
+            <span class="정보키">비전</span>
+            <span class="정보값" contenteditable="true" onblur="저장예약()">지점 신뢰도 1위 달성</span>
+          </div>
+          <div class="정보항목">
+            <span class="정보키">지점명</span>
+            <span class="정보값" contenteditable="true" onblur="저장예약()">00지점</span>
+          </div>
+          <div class="정보항목">
+            <span class="정보키">월정 회비</span>
+            <span class="정보값 녹색">₩<span id="회비금액" contenteditable="true" onblur="저장예약();전체재계산()">30,000</span>원</span>
+          </div>
+        </div>
+        <button class="액션버튼" onclick="탭이동('탭-가동실적')">📊 가동현황 분석 보고</button>
+      </div>
+      <div class="패널">
+        <div class="패널-제목">⚡ 메트라이프 시그니처 볼링 상품 특약</div>
+        <div class="패널-부제">각 항목을 클릭하면 직접 수정할 수 있습니다.</div>
+        <div class="특약카드 금색">
+          <div class="특약-제목" contenteditable="true" onblur="저장예약()">💵 달러 보험 특약 (안전자산 확보형)</div>
+          <div class="특약-내용" contenteditable="true" onblur="저장예약()">회원은 자신의 에버리지를 변동성 강한 하우스볼 상태로 두지 않고, 안전하게 '글로벌 안전 자산' (최소 에버리지 130 이상)으로 헷징할 권리와 의무를 지닙니다. 스코어가 100점 미만으로 폭락할 경우, 즉시 치킨 다리를 동료에게 양도하는 '통화 스와프'를 체결합니다.</div>
+        </div>
+        <div class="특약카드">
+          <div class="특약-제목" contenteditable="true" onblur="저장예약()">🛡️ 종신 보험 특약 (평생 보장형)</div>
+          <div class="특약-내용" contenteditable="true" onblur="저장예약()">본 동호회는 한 번 가입하면 탈퇴가 없습니다. 무릎이 닳는 순간까지 평생토록 공을 굴려야 하며, 투구 도중 '스플릿(위험 발생)'이 나더라도 남은 팀원들이 끝까지 책임지고 스페어 처리를 해주는 '유가족 보장 시스템'을 가동합니다.</div>
+        </div>
+        <div class="특약카드 보라">
+          <div class="특약-제목" contenteditable="true" onblur="저장예약()">📈 변액 보험 특약 (수익률 극대화형)</div>
+          <div class="특약-내용" contenteditable="true" onblur="저장예약()">[변액종신] 볼링장 레인 오일 상태에 따라 공의 각도와 회전수를 기민하게 수정하여 최고의 점수(수익률)를 추구합니다. [변액연금] 전반전에 점수가 안 나오더라도, 마지막 10프레임 보너스 샷에서 대역전 스트라이크를 기록해 만회하는 볼러를 전적으로 보장합니다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────────────────────
+    탭2: 6대 핵심가치
+  ─────────────────────────────── -->
+  <div id="탭-가치" class="섹션">
+    <div class="패널">
+      <div class="패널-제목">🏆 우리가 볼링 레인 위에서 일하는 법 (6대 핵심가치)</div>
+      <div class="패널-부제">메트라이프금융서비스의 전사 행동 약속이 볼링장 정식 룰과 혼합되었습니다. 클릭하면 수정 가능합니다.</div>
+      <div class="가치그리드">
+        <div class="가치카드">
+          <div class="가치헤더"><div class="가치번호">1</div><div><div class="가치-원제">고객 중심 →</div><div class="가치-번역" contenteditable="true" onblur="저장예약()">동료 중심</div></div></div>
+          <div class="가치-항목"><span class="실천">●</span><div class="가치-텍스트" contenteditable="true" onblur="저장예약()">동료 투구 시 어프로치 옆에서 조용히 대기하며 진정한 열정과 기를 보낸다.</div></div>
+          <div class="가치-항목"><span class="금지">○</span><div class="가치-텍스트" contenteditable="true" onblur="저장예약()">동료 신체 구조를 고려하지 않고 무리한 자세를 강요하지 않는다.</div></div>
+        </div>
+        <div class="가치카드">
+          <div class="가치헤더"><div class="가치번호">2</div><div><div class="가치-원제">신뢰와 투명성 →</div><div class="가치-번역" contenteditable="true" onblur="저장예약()">스코어 투명성</div></div></div>
+          <div class="가치-항목"><span class="실천">●</span><div class="가치-텍스트" contenteditable="true" onblur="저장예약()">공이 거터로 빠졌을 때 변명 없이 진실만을 공유한다.</div></div>
+          <div class="가치-항목"><span class="금지">○</span><div class="가치-텍스트" contenteditable="true" onblur="저장예약()">파울 라인을 밟았음에도 센서 고장을 틈타 득점이라 우기지 않는다.</div></div>
+        </div>
+        <div class="가치카드">
+          <div class="가치헤더"><div class="가치번호">3</div><div><div class="가치-원제">전문성과 혁신 →</div><div class="가치-번역" contenteditable="true" onblur="저장예약()">구질의 혁신</div></div></div>
+          <div class="가치-항목"><span class="실천">●</span><div class="가치-텍스트" contenteditable="true" onblur="저장예약()">유튜브 분석·프로 아대 사용법 등을 적극 도입해 전문성을 격상한다.</div></div>
+          <div class="가치-항목"><span class="금지">○</span><div class="가치-텍스트" contenteditable="true" onblur="저장예약()">"오직 하우스볼 막볼 직진"만 고수하며 새로운 훅 시도를 거부하지 않는다.</div></div>
+        </div>
+        <div class="가치카드">
+          <div class="가치헤더"><div class="가치번호">4</div><div><div class="가치-원제">책임감과 윤리 →</div><div class="가치-번역" contenteditable="true" onblur="저장예약()">매너와 윤리</div></div></div>
+          <div class="가치-항목"><span class="실천">●</span><div class="가치-텍스트" contenteditable="true" onblur="저장예약()">내가 굴린 공의 궤적과 결과에 대해 온전히 책임을 지며 매너를 준수한다.</div></div>
+          <div class="가치-항목"><span class="금지">○</span><div class="가치-텍스트" contenteditable="true" onblur="저장예약()">승리를 위해 상대 팀에게 방해 공작을 하지 않는다.</div></div>
+        </div>
+        <div class="가치카드">
+          <div class="가치헤더"><div class="가치번호">5</div><div><div class="가치-원제">팀워크와 포용 →</div><div class="가치-번역" contenteditable="true" onblur="저장예약()">무차별 하이파이브</div></div></div>
+          <div class="가치-항목"><span class="실천">●</span><div class="가치-텍스트" contenteditable="true" onblur="저장예약()">에버리지 격차를 뛰어넘어 거터든 스트라이크든 무차별 하이파이브로 단결한다.</div></div>
+          <div class="가치-항목"><span class="금지">○</span><div class="가치-텍스트" contenteditable="true" onblur="저장예약()">에버리지 낮은 회원을 팀에서 누락하거나 책임을 전가하지 않는다.</div></div>
+        </div>
+        <div class="가치카드">
+          <div class="가치헤더"><div class="가치번호">6</div><div><div class="가치-원제">열정과 도전 →</div><div class="가치-번역" contenteditable="true" onblur="저장예약()">10번 핀 저격 정신</div></div></div>
+          <div class="가치-항목"><span class="실천">●</span><div class="가치-텍스트" contenteditable="true" onblur="저장예약()">역전이 불가능해 보여도 마지막 찬스를 사수하기 위해 용감하게 전진 투구한다.</div></div>
+          <div class="가치-항목"><span class="금지">○</span><div class="가치-텍스트" contenteditable="true" onblur="저장예약()">"어차피 안 된다"며 시도하기 전에 패배주의에 빠지지 않는다.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────────────────────
+    탭3: 회원 명단
+  ─────────────────────────────── -->
+  <div id="탭-명단" class="섹션">
+    <div class="패널">
+      <div class="도구모음">
+        <div>
+          <div class="패널-제목">👥 동호회 회원 관리 장부</div>
+          <div class="패널-부제" style="margin-bottom:0">이름·역할·구질·에버리지를 클릭해 직접 편집하세요.</div>
+        </div>
+        <div class="도구모음-오른쪽">
+          <button class="알약버튼 녹색" onclick="회원추가()">＋ 신입 등록</button>
+          <button class="알약버튼 분홍" onclick="전체삭제()">🗑 명단 비우기</button>
+          <div class="평균알약">평균 에버리지 <span id="평균표시">0.0</span>점</div>
+        </div>
+      </div>
+      <div class="테이블감싸기">
+        <table>
+          <thead>
+            <tr>
+              <th style="text-align:center;width:32px">번호</th>
+              <th>이름</th><th>동호회 역할</th><th>개인 구질</th>
+              <th style="text-align:center">에버리지</th>
+              <th style="text-align:center">회비 현황</th>
+              <th style="text-align:center;width:32px">해촉</th>
+            </tr>
+          </thead>
+          <tbody id="회원목록"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────────────────────
+    탭4: 가동 실적
+  ─────────────────────────────── -->
+  <div id="탭-가동실적" class="섹션">
+    <div class="패널">
+      <div class="패널-제목">📈 당월 영업 가동 실적 — 건별 상세 입력</div>
+      <div class="패널-부제">이름 클릭 → 펼쳐짐 → ＋버튼으로 계약 추가 → 상품명·건수·금액 입력 → 총액 자동 계산</div>
+      <div id="가동블록목록"></div>
+      <div class="요약행">
+        <div class="요약카드">
+          <div class="요약-라벨 메트">● 메트라이프 총 계약</div>
+          <div class="요약-값"><span id="요약-메트건수">0</span>건</div>
+          <div class="요약-부제">₩<span id="요약-메트금액">0</span></div>
+        </div>
+        <div class="요약카드">
+          <div class="요약-라벨 타생">● 타생보 총 계약</div>
+          <div class="요약-값"><span id="요약-타생건수">0</span>건</div>
+          <div class="요약-부제">₩<span id="요약-타생금액">0</span></div>
+        </div>
+        <div class="요약카드">
+          <div class="요약-라벨 타손">● 타손보 총 계약</div>
+          <div class="요약-값"><span id="요약-타손건수">0</span>건</div>
+          <div class="요약-부제">₩<span id="요약-타손금액">0</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────────────────────
+    탭5: 회비 & 장부
+  ─────────────────────────────── -->
+  <div id="탭-장부" class="섹션">
+    <div class="패널">
+      <div class="패널-제목">💰 회비 수납 &amp; 입출금 장부</div>
+      <div class="장부요약">
+        <div class="장부카드">
+          <div class="장부-라벨 수입">총 입금액 (A)</div>
+          <div class="장부-값" id="장부-수입">₩0</div>
+          <div class="장부-부제">회비 자동 합산 포함</div>
+        </div>
+        <div class="장부카드">
+          <div class="장부-라벨 지출">총 지출액 (B)</div>
+          <div class="장부-값" id="장부-지출">₩0</div>
+        </div>
+        <div class="장부카드">
+          <div class="장부-라벨 잔액">동호회 잔액 (A-B)</div>
+          <div class="장부-값" id="장부-잔액">₩0</div>
+        </div>
+      </div>
+
+      <!-- 연간 회비 수납 -->
+      <div style="margin-bottom:18px">
+        <div class="소제목">📅 연간 회비 수납 관리대장</div>
+        <div class="소부제">월 칸을 클릭하면 완납(O) ↔ 미납(X)으로 바뀝니다. 완납 금액은 장부에 자동 반영됩니다.</div>
+        <div class="테이블감싸기">
+          <table>
+            <thead>
+              <tr>
+                <th style="text-align:left;padding-left:11px">이름</th>
+                <th class="월헤더">1월</th><th class="월헤더">2월</th><th class="월헤더">3월</th>
+                <th class="월헤더">4월</th><th class="월헤더">5월</th><th class="월헤더">6월</th>
+                <th class="월헤더">7월</th><th class="월헤더">8월</th><th class="월헤더">9월</th>
+                <th class="월헤더">10월</th><th class="월헤더">11월</th><th class="월헤더">12월</th>
+                <th style="color:var(--lav);font-size:8px;padding:9px;font-weight:700">누적 수납</th>
+              </tr>
+            </thead>
+            <tbody id="회비그리드"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 입출금 대장 -->
+      <div style="border-top:1px solid var(--bd);padding-top:16px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:11px;flex-wrap:wrap;gap:8px">
+          <div>
+            <div class="소제목">📒 입출금 수납 대장</div>
+            <div class="소부제" style="margin-bottom:0">볼링장 대관·회식·시상 등 항목을 기록하고 정산합니다.</div>
+          </div>
+          <button class="알약버튼 녹색" onclick="장부행추가()">＋ 내역 추가</button>
+        </div>
+        <div class="테이블감싸기">
+          <table>
+            <thead>
+              <tr>
+                <th style="text-align:center;width:32px">번호</th>
+                <th>거래 일자</th>
+                <th style="text-align:center;width:60px">구분</th>
+                <th>적요 (항목 내용)</th>
+                <th style="text-align:right">거래 금액</th>
+                <th>비고</th>
+                <th style="width:32px;text-align:center">삭제</th>
+              </tr>
+            </thead>
+            <tbody id="입출금장부">
+              <tr data-고정="true">
+                <td style="text-align:center;color:var(--t3);font-size:10px">1</td>
+                <td class="비고셀">자동 계산</td>
+                <td style="text-align:center"><span class="뱃지 녹색">입금</span></td>
+                <td style="font-weight:700;font-size:11px;color:var(--t1)">동호회 월정 연간 수납 회비 자동 합산</td>
+                <td style="text-align:right;font-weight:700;color:var(--sage);font-family:var(--fm);font-size:11px" id="회비자동합산">₩0</td>
+                <td class="비고셀">회비 납부대장 실시간 연동</td>
+                <td style="text-align:center;color:var(--t3)">—</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer style="text-align:center;padding:16px 0 4px;font-size:10px;color:var(--t3)">
+    © 2026 메트라이프금융서비스 · with 볼링 클럽 · 모든 권리 보유
+  </footer>
+</div><!-- #앱전체 -->
+
+<!-- 모바일 하단 네비 -->
+<div class="모바일네비">
+  <div class="모바일탭 활성" id="모바일-탭-컨셉"       onclick="탭이동('탭-컨셉')"><span class="모바일아이콘">✨</span>컨셉</div>
+  <div class="모바일탭"       id="모바일-탭-가치"       onclick="탭이동('탭-가치')"><span class="모바일아이콘">🏆</span>가치</div>
+  <div class="모바일탭"       id="모바일-탭-명단"       onclick="탭이동('탭-명단')"><span class="모바일아이콘">👥</span>명단</div>
+  <div class="모바일탭"       id="모바일-탭-가동실적"   onclick="탭이동('탭-가동실적')"><span class="모바일아이콘">📈</span>가동</div>
+  <div class="모바일탭"       id="모바일-탭-장부"       onclick="탭이동('탭-장부')"><span class="모바일아이콘">💰</span>장부</div>
+</div>
+<div class="토스트" id="토스트메시지"></div>
+
+<!-- ══════════════════════════════════════════
+  자바스크립트
+══════════════════════════════════════════ -->
+<script>
+/* ─────────────────────────────────────
+  앱스크립트 코드 (복사해서 사용)
+───────────────────────────────────── */
+const GAS코드 = `function doGet(e) {
+  try {
+    var p = PropertiesService.getScriptProperties();
+    var id = p.getProperty('SSID');
+    if (!id) {
+      var ss = SpreadsheetApp.create('with볼링클럽데이터');
+      id = ss.getId();
+      p.setProperty('SSID', id);
+      ss.getSheetByName('Sheet1').setName('data');
+    }
+    var sh = SpreadsheetApp.openById(id).getSheetByName('data');
+    var v = sh.getRange(1, 1).getValue();
+    return ContentService
+      .createTextOutput(v || '{}')
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ error: err.message }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function doPost(e) {
+  try {
+    var p = PropertiesService.getScriptProperties();
+    var id = p.getProperty('SSID');
+    if (!id) {
+      var ss = SpreadsheetApp.create('with볼링클럽데이터');
+      id = ss.getId();
+      p.setProperty('SSID', id);
+      ss.getSheetByName('Sheet1').setName('data');
+    }
+    var sh = SpreadsheetApp.openById(id).getSheetByName('data');
+    sh.getRange(1, 1).setValue(e.postData.contents);
+    return ContentService
+      .createTextOutput('ok')
+      .setMimeType(ContentService.MimeType.TEXT);
+  } catch (err) {
+    return ContentService
+      .createTextOutput('error:' + err.message)
+      .setMimeType(ContentService.MimeType.TEXT);
+  }
+}`;
+
+document.getElementById('코드미리보기').textContent = GAS코드;
+
+/* ─────────────────────────────────────
+  전역 상태
+───────────────────────────────────── */
+const 저장소키 = 'with-bowling-v1';
+const 한국요일 = ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'];
+const 한국월   = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+
+let GAS주소 = localStorage.getItem('with-gas-url') || '';
+let 모드 = GAS주소 ? '공유' : '로컬';
+
+let 상태 = {
+  클럽명: '',
+  회비금액문자: '30000',
+  회원목록: [
+    { id:1, 이름:'김메트',   역할:'명예 구단주',  구질:'클래식 직구',        에버리지:170, 회비:'완납' },
+    { id:2, 이름:'박스트',   역할:'동호회 회장',  구질:'파워 크랭커 (훅)',   에버리지:185, 회비:'완납' },
+    { id:3, 이름:'이라이프', 역할:'총무/관리자',  구질:'스피닝 아대 볼러',   에버리지:160, 회비:'완납' },
+    { id:4, 이름:'최달러',   역할:'기술 감사',    구질:'덤리스 양손볼러',    에버리지:155, 회비:'완납' },
+    { id:5, 이름:'정변액',   역할:'회원',         구질:'백스핀 훅',          에버리지:145, 회비:'완납' },
+    { id:6, 이름:'강종신',   역할:'회원',         구질:'스트레이트 슬라이더', 에버리지:130, 회비:'미납' },
+    { id:7, 이름:'유케어',   역할:'회원',         구질:'정밀 스페어 전문',   에버리지:125, 회비:'완납' },
+    { id:8, 이름:'신스페어', 역할:'오락부장',     구질:'라이트 롤 훅',       에버리지:110, 회비:'미납' }
+  ],
+  회비납부현황: {},
+  가동실적:    {},
+  장부내역:    [],
+  편집텍스트:  {},
+  타임스탬프:  0
+};
+
+// 초기 납부/실적 데이터 세팅
+상태.회원목록.forEach(m => {
+  상태.회비납부현황[m.id] = [0,0,0,0,0,0,0,0,0,0,0,0];
+  상태.가동실적[m.id] = { 계약목록: [] };
+});
+
+/* ─────────────────────────────────────
+  설정 화면
+───────────────────────────────────── */
+function GAS연결() {
+  const url = (document.getElementById('GAS주소입력').value || '').trim();
+  if (!url || !url.includes('script.google.com')) {
+    토스트보기('❌ 올바른 앱스 스크립트 URL을 입력해주세요'); return;
+  }
+  GAS주소 = url;
+  localStorage.setItem('with-gas-url', url);
+  모드 = '공유';
+  document.getElementById('설정화면').style.display = 'none';
+  앱시작();
+}
+function 로컬모드시작() {
+  모드 = '로컬'; GAS주소 = '';
+  document.getElementById('설정화면').style.display = 'none';
+  앱시작();
+}
+function 설정화면보기() {
+  const inp = document.getElementById('GAS주소입력');
+  if (inp) inp.value = GAS주소 || '';
+  document.getElementById('설정화면').style.display = 'flex';
+}
+function 코드복사() {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(GAS코드)
+      .then(() => 토스트보기('✅ 코드가 복사되었습니다! 앱스 스크립트에 붙여넣으세요.'))
+      .catch(() => 폴백복사(GAS코드));
+  } else 폴백복사(GAS코드);
+}
+
+/* ─────────────────────────────────────
+  데이터 저장 / 불러오기
+───────────────────────────────────── */
+function 현재상태수집() {
+  상태.클럽명 = (document.getElementById('클럽명')?.value || '').trim();
+  상태.회비금액문자 = (document.getElementById('회비금액')?.textContent || '30000').replace(/,/g,'').trim();
+  상태.편집텍스트 = {};
+  document.querySelectorAll('[contenteditable]').forEach((el, i) => {
+    const k = el.id || ('_ce' + i);
+    상태.편집텍스트[k] = el.innerHTML;
+  });
+  상태.장부내역 = [];
+  document.querySelectorAll('#입출금장부 tr').forEach(tr => {
+    if (tr.dataset.고정) return;
+    상태.장부내역.push({
+      날짜: tr.cells[1]?.textContent.trim() || '',
+      구분: tr.querySelector('.구분선택')?.value || '지출',
+      적요: tr.cells[3]?.textContent.trim() || '',
+      금액: parseInt(tr.querySelector('.장부금액')?.textContent.replace(/,/g,'') || '0') || 0,
+      비고: tr.cells[5]?.textContent.trim() || ''
+    });
+  });
+  상태.타임스탬프 = Date.now();
+}
+
+async function 데이터저장() {
+  현재상태수집();
+  const json = JSON.stringify(상태);
+  localStorage.setItem(저장소키, json);
+  if (모드 === '로컬') { 동기화상태('연결됨', '내 기기에 저장됨 ✓'); return; }
+  동기화상태('로딩중', '저장 중…');
+  try {
+    await fetch(GAS주소, {
+      method: 'POST', mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: json
+    });
+    동기화상태('연결됨', '공유 저장 완료 ✓');
+  } catch(e) {
+    동기화상태('오류', '오프라인 — 로컬 저장됨');
+  }
+}
+
+async function 데이터불러오기() {
+  if (모드 === '로컬') {
+    상태적용(JSON.parse(localStorage.getItem(저장소키) || 'null'));
+    동기화상태('연결됨', '내 기기 저장 모드');
+    return;
+  }
+  동기화상태('로딩중', '데이터 불러오는 중…');
+  try {
+    const res = await fetch(GAS주소 + '?action=get&t=' + Date.now());
+    const text = await res.text();
+    const d = JSON.parse(text);
+    if (d && !d.error) {
+      상태적용(d);
+      localStorage.setItem(저장소키, JSON.stringify(d));
+      동기화상태('연결됨', '공유 데이터 연결됨 ✓');
+    } else {
+      상태적용(JSON.parse(localStorage.getItem(저장소키) || 'null'));
+      동기화상태('연결됨', '저장된 데이터 사용 중');
+    }
+  } catch(e) {
+    상태적용(JSON.parse(localStorage.getItem(저장소키) || 'null'));
+    동기화상태('오류', '오프라인 — 저장 데이터 사용');
+  }
+}
+
+async function 강제새로고침() {
+  if (모드 === '공유') await 데이터불러오기();
+  else { 데이터저장(); 토스트보기('✅ 저장 완료!'); }
+}
+
+function 상태적용(d) {
+  if (!d) return;
+  if (d.회원목록 && d.회원목록.length) 상태.회원목록 = d.회원목록;
+  if (d.회비납부현황) 상태.회비납부현황 = d.회비납부현황;
+  if (d.가동실적)     상태.가동실적 = d.가동실적;
+  if (d.장부내역)     상태.장부내역 = d.장부내역;
+  if (d.클럽명 !== undefined)    상태.클럽명 = d.클럽명;
+  if (d.회비금액문자) 상태.회비금액문자 = d.회비금액문자;
+  if (d.편집텍스트)   상태.편집텍스트 = d.편집텍스트;
+  if (d.타임스탬프)   상태.타임스탬프 = d.타임스탬프;
+  상태.회원목록.forEach(m => {
+    if (!상태.회비납부현황[m.id]) 상태.회비납부현황[m.id] = [0,0,0,0,0,0,0,0,0,0,0,0];
+    if (!상태.가동실적[m.id])     상태.가동실적[m.id] = { 계약목록: [] };
+  });
+  UI복원();
+  전체재계산();
+  회원목록렌더();
+}
+
+function UI복원() {
+  const ci = document.getElementById('클럽명');
+  if (ci && 상태.클럽명) { ci.value = 상태.클럽명; ci.classList.toggle('입력됨', !!상태.클럽명); }
+  const rv = document.getElementById('회비금액');
+  if (rv && 상태.회비금액문자) rv.textContent = parseInt(상태.회비금액문자).toLocaleString();
+  if (상태.편집텍스트) {
+    document.querySelectorAll('[contenteditable]').forEach((el, i) => {
+      const k = el.id || ('_ce' + i);
+      if (상태.편집텍스트[k] !== undefined) el.innerHTML = 상태.편집텍스트[k];
+    });
+  }
+  if (상태.장부내역 && 상태.장부내역.length) {
+    const tb = document.getElementById('입출금장부');
+    const fixed = tb.querySelector('[data-고정]');
+    tb.innerHTML = ''; if (fixed) tb.appendChild(fixed);
+    상태.장부내역.forEach((r, i) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = 장부행HTML(i + 2, r.날짜, r.구분, r.적요, r.금액, r.비고);
+      tb.appendChild(tr);
+    });
+  }
+}
+
+let 저장타이머 = null, 폴링타이머 = null;
+function 저장예약() { clearTimeout(저장타이머); 저장타이머 = setTimeout(데이터저장, 600); }
+
+function 폴링시작() {
+  if (모드 !== '공유') return;
+  clearInterval(폴링타이머);
+  폴링타이머 = setInterval(async () => {
+    try {
+      const res = await fetch(GAS주소 + '?action=get&t=' + Date.now());
+      const text = await res.text();
+      const d = JSON.parse(text);
+      if (d && !d.error && d.타임스탬프 && d.타임스탬프 > (상태.타임스탬프 || 0)) {
+        상태적용(d);
+        const 현재탭 = document.querySelector('.섹션.활성');
+        if (현재탭) {
+          if (현재탭.id === '탭-명단')     회원목록렌더();
+          else if (현재탭.id === '탭-가동실적') 가동실적렌더();
+          else if (현재탭.id === '탭-장부')  { 회비그리드렌더(); 장부계산(); }
+        }
+        동기화상태('연결됨', '다른 회원이 업데이트함 ✓');
+      }
+    } catch(e) {}
+  }, 10000);
+}
+
+/* ─────────────────────────────────────
+  시계
+───────────────────────────────────── */
+function 시계업데이트() {
+  const n = new Date(), h = n.getHours(), m = n.getMinutes(), s = n.getSeconds();
+  const 패드 = v => v.toString().padStart(2, '0');
+  const 시침 = document.getElementById('시침'); if(시침) 시침.style.transform = `rotate(${h*30+m*.5}deg)`;
+  const 분침 = document.getElementById('분침'); if(분침) 분침.style.transform = `rotate(${m*6}deg)`;
+  const 초침 = document.getElementById('초침'); if(초침) 초침.style.transform = `rotate(${s*6}deg)`;
+  const dv = document.getElementById('디지털시각'); if(dv) dv.textContent = 패드(h)+':'+패드(m);
+  const yd = document.getElementById('요일'); if(yd) yd.textContent = 한국요일[n.getDay()];
+  const dt = document.getElementById('날짜'); if(dt) dt.textContent = n.getFullYear()+'/'+(패드(n.getMonth()+1))+'/'+패드(n.getDate());
+  const hm = document.getElementById('현재월'); if(hm) hm.textContent = 한국월[n.getMonth()];
+}
+function 연도바업데이트() {
+  const n = new Date();
+  const 진행 = Math.round((n - new Date(n.getFullYear(),0,1)) / (new Date(n.getFullYear()+1,0,1) - new Date(n.getFullYear(),0,1)) * 100);
+  const f = document.getElementById('연도채움'); if(f) f.style.width = 진행+'%';
+  const p = document.getElementById('연도퍼센트'); if(p) p.textContent = 진행+'%';
+}
+시계업데이트(); 연도바업데이트(); setInterval(시계업데이트, 1000);
+
+/* ─────────────────────────────────────
+  탭 전환
+───────────────────────────────────── */
+function 탭이동(탭ID) {
+  document.querySelectorAll('.섹션').forEach(s => s.classList.remove('활성'));
+  document.querySelectorAll('.탭버튼').forEach(b => b.classList.remove('활성'));
+  document.querySelectorAll('.모바일탭').forEach(b => b.classList.remove('활성'));
+  document.getElementById(탭ID).classList.add('활성');
+  const pc = document.getElementById('버튼-' + 탭ID); if(pc) pc.classList.add('활성');
+  const mob = document.getElementById('모바일-' + 탭ID); if(mob) mob.classList.add('활성');
+  if (탭ID === '탭-명단')       회원목록렌더();
+  else if (탭ID === '탭-가동실적') 가동실적렌더();
+  else if (탭ID === '탭-장부')  { 회비그리드렌더(); 장부계산(); }
+}
+
+/* ─────────────────────────────────────
+  회원 명단
+───────────────────────────────────── */
+function 회원목록렌더() {
+  const tb = document.getElementById('회원목록'); if(!tb) return; tb.innerHTML = '';
+  상태.회원목록.forEach((m, i) => {
+    const tr = document.createElement('tr'); tr.className = '행나타남';
+    tr.innerHTML = `
+      <td style="text-align:center;color:var(--t3);font-size:10px">${i+1}</td>
+      <td contenteditable="true" onblur="회원필드수정(${m.id},'이름',this.textContent)" style="font-weight:700;color:var(--t1)">${m.이름}</td>
+      <td contenteditable="true" onblur="회원필드수정(${m.id},'역할',this.textContent)" style="color:var(--sage);font-weight:600">${m.역할}</td>
+      <td contenteditable="true" onblur="회원필드수정(${m.id},'구질',this.textContent)" style="color:var(--t2)">${m.구질}</td>
+      <td style="text-align:center;font-family:var(--fm);font-weight:500" contenteditable="true" onblur="회원필드수정(${m.id},'에버리지',this.textContent,true)">${m.에버리지}</td>
+      <td style="text-align:center"><span class="뱃지 ${m.회비==='완납'?'녹색':'빨강'}" onclick="회비토글(${m.id})">${m.회비}</span></td>
+      <td style="text-align:center"><button class="삭제버튼" onclick="회원삭제(${m.id})">×</button></td>`;
+    tb.appendChild(tr);
+  });
+  텍스트설정('탭-회원수', 상태.회원목록.length);
+  텍스트설정('대시-회원수', 상태.회원목록.length);
+  const avg = 상태.회원목록.length ? 상태.회원목록.reduce((a,x) => a+x.에버리지, 0) / 상태.회원목록.length : 0;
+  텍스트설정('평균표시', avg.toFixed(1));
+  텍스트설정('대시-에버리지', avg.toFixed(1));
+}
+function 회원필드수정(id, 키, 값, 숫자=false) {
+  const m = 상태.회원목록.find(x => x.id === id); if(!m) return;
+  const 파싱값 = 숫자 ? (parseInt(값.replace(/,/g,'')) || 0) : 값.trim();
+  if (m[키] === 파싱값) return;
+  m[키] = 파싱값;
+  전체재계산(); if(키==='이름') 회원목록렌더(); 저장예약();
+}
+function 회비토글(id) {
+  const m = 상태.회원목록.find(x => x.id===id); if(!m) return;
+  m.회비 = m.회비==='완납' ? '미납' : '완납';
+  회원목록렌더(); 저장예약();
+}
+function 회원추가() {
+  const id = Date.now();
+  상태.회원목록.push({ id, 이름:'신규FP_'+(상태.회원목록.length+1), 역할:'FP', 구질:'직구', 에버리지:120, 회비:'미납' });
+  상태.회비납부현황[id] = [0,0,0,0,0,0,0,0,0,0,0,0];
+  상태.가동실적[id] = { 계약목록: [] };
+  전체재계산(); 회원목록렌더(); 저장예약();
+}
+function 회원삭제(id) {
+  const idx = 상태.회원목록.findIndex(x => x.id===id); if(idx<0) return;
+  상태.회원목록.splice(idx, 1);
+  delete 상태.회비납부현황[id]; delete 상태.가동실적[id];
+  전체재계산(); 회원목록렌더(); 저장예약();
+}
+function 전체삭제() {
+  if(!confirm('전체 명단을 삭제하시겠습니까?')) return;
+  상태.회원목록 = []; 상태.회비납부현황 = {}; 상태.가동실적 = {};
+  전체재계산(); 회원목록렌더(); 저장예약();
+}
+function 클럽명변경(el) { el.classList.toggle('입력됨', el.value.trim().length > 0); }
+
+/* ─────────────────────────────────────
+  가동 실적 (건별)
+───────────────────────────────────── */
+function 가동실적렌더() {
+  const wrap = document.getElementById('가동블록목록'); if(!wrap) return; wrap.innerHTML = '';
+  if (!상태.회원목록.length) {
+    wrap.innerHTML = '<div style="text-align:center;color:var(--t3);padding:24px;font-size:12px">회원 명단 탭에서 회원을 먼저 등록해주세요.</div>';
+    가동요약계산(); return;
+  }
+  상태.회원목록.forEach(m => {
+    if (!상태.가동실적[m.id]) 상태.가동실적[m.id] = { 계약목록: [] };
+    const cs = 상태.가동실적[m.id].계약목록 || [];
+    const mC = cs.filter(c=>c.유형==='메트'), oC = cs.filter(c=>c.유형==='타생'), nC = cs.filter(c=>c.유형==='타손');
+    const mc = mC.reduce((a,c)=>a+(parseInt(c.건수)||0),0), ms = mC.reduce((a,c)=>a+(parseInt(c.금액)||0),0);
+    const oc = oC.reduce((a,c)=>a+(parseInt(c.건수)||0),0), os = oC.reduce((a,c)=>a+(parseInt(c.금액)||0),0);
+    const nc = nC.reduce((a,c)=>a+(parseInt(c.건수)||0),0), ns = nC.reduce((a,c)=>a+(parseInt(c.금액)||0),0);
+    const 합계 = ms+os+ns;
+    const 계약HTML = cs.map((c,ci) => `
+      <div class="계약행">
+        <input class="계약입력" type="text" placeholder="상품명 (달러종신, 변액연금 등)" value="${c.상품명||''}" oninput="계약수정(${m.id},${ci},'상품명',this.value)">
+        <input class="계약입력 모노" type="number" placeholder="건수" min="1" value="${c.건수||''}" oninput="계약수정(${m.id},${ci},'건수',this.value)">
+        <input class="계약입력 모노" type="number" placeholder="금액(원)" min="0" value="${c.금액||''}" oninput="계약수정(${m.id},${ci},'금액',this.value)">
+        <button class="삭제버튼" onclick="계약삭제(${m.id},${ci})">×</button>
+      </div>
+      <div class="유형선택행">
+        <label><input type="radio" name="유형${m.id}_${ci}" value="메트" ${c.유형==='메트'?'checked':''} onchange="계약수정(${m.id},${ci},'유형','메트')" style="accent-color:var(--sage)"><span style="color:var(--sage);font-weight:700">메트라이프</span></label>
+        <label><input type="radio" name="유형${m.id}_${ci}" value="타생" ${c.유형==='타생'?'checked':''} onchange="계약수정(${m.id},${ci},'유형','타생')" style="accent-color:var(--lav)"><span style="color:var(--lav);font-weight:700">타생보</span></label>
+        <label><input type="radio" name="유형${m.id}_${ci}" value="타손" ${c.유형==='타손'?'checked':''} onchange="계약수정(${m.id},${ci},'유형','타손')" style="accent-color:var(--amb)"><span style="color:var(--amb);font-weight:700">타손보</span></label>
+      </div>`).join('');
+
+    const block = document.createElement('div'); block.className = '회원블록';
+    block.innerHTML = `
+      <div class="회원블록-헤더" onclick="블록토글(${m.id})">
+        <div class="회원블록-이름">
+          <span>${m.이름}</span>
+          <span class="실적태그 ${mc>0?'메트':'없음'}">메트 ${mc}건</span>
+          <span class="실적태그 ${oc>0?'타생':'없음'}">타생 ${oc}건</span>
+          <span class="실적태그 ${nc>0?'타손':'없음'}">타손 ${nc}건</span>
+        </div>
+        <div class="회원블록-합계">
+          <span class="합계금액" style="color:${합계>0?'var(--t1)':'var(--t3)'}">₩${합계.toLocaleString()}</span>
+          <span class="화살표" id="화살표-${m.id}">▼</span>
+        </div>
+      </div>
+      <div class="회원블록-내용" id="내용-${m.id}">${계약HTML}
+        <div style="margin-top:8px">
+          <button class="계약추가버튼" onclick="계약추가(${m.id},'메트')">＋ 메트라이프 추가</button>
+          <button class="계약추가버튼" style="color:var(--lav)" onclick="계약추가(${m.id},'타생')">＋ 타생보 추가</button>
+          <button class="계약추가버튼" style="color:var(--amb)" onclick="계약추가(${m.id},'타손')">＋ 타손보 추가</button>
+        </div>
+      </div>`;
+    wrap.appendChild(block);
+  });
+  가동요약계산();
+}
+function 블록토글(id) {
+  const 내용 = document.getElementById('내용-'+id), 화살표 = document.getElementById('화살표-'+id);
+  if(!내용) return;
+  const 열림 = 내용.style.display === 'block';
+  내용.style.display = 열림 ? 'none' : 'block';
+  if(화살표) 화살표.classList.toggle('열림', !열림);
+}
+function 계약추가(id, 유형) {
+  if(!상태.가동실적[id]) 상태.가동실적[id] = { 계약목록: [] };
+  상태.가동실적[id].계약목록.push({ 유형, 상품명:'', 건수:1, 금액:0 });
+  가동실적렌더();
+  const b = document.getElementById('내용-'+id); if(b) b.style.display = 'block';
+  const h = document.getElementById('화살표-'+id); if(h) h.classList.add('열림');
+}
+function 계약삭제(id, ci) {
+  if(!상태.가동실적[id]) return;
+  상태.가동실적[id].계약목록.splice(ci, 1);
+  가동실적렌더(); 저장예약();
+}
+function 계약수정(id, ci, 키, 값) {
+  if(!상태.가동실적[id]||!상태.가동실적[id].계약목록[ci]) return;
+  if(키==='건수'||키==='금액') 상태.가동실적[id].계약목록[ci][키] = parseInt(값)||0;
+  else 상태.가동실적[id].계약목록[ci][키] = 값;
+  가동요약계산(); 저장예약();
+}
+function 가동요약계산() {
+  let mc=0,ms=0,oc=0,os=0,nc=0,ns=0,활성=0;
+  상태.회원목록.forEach(m => {
+    const cs = (상태.가동실적[m.id]||{}).계약목록||[];
+    const 메트건 = cs.filter(c=>c.유형==='메트').reduce((a,c)=>a+(parseInt(c.건수)||0),0);
+    const 타생건 = cs.filter(c=>c.유형==='타생').reduce((a,c)=>a+(parseInt(c.건수)||0),0);
+    const 타손건 = cs.filter(c=>c.유형==='타손').reduce((a,c)=>a+(parseInt(c.건수)||0),0);
+    mc+=메트건; ms+=cs.filter(c=>c.유형==='메트').reduce((a,c)=>a+(parseInt(c.금액)||0),0);
+    oc+=타생건; os+=cs.filter(c=>c.유형==='타생').reduce((a,c)=>a+(parseInt(c.금액)||0),0);
+    nc+=타손건; ns+=cs.filter(c=>c.유형==='타손').reduce((a,c)=>a+(parseInt(c.금액)||0),0);
+    if(메트건>0||타생건>0||타손건>0) 활성++;
+  });
+  텍스트설정('요약-메트건수', mc); 텍스트설정('요약-메트금액', ms.toLocaleString());
+  텍스트설정('요약-타생건수', oc); 텍스트설정('요약-타생금액', os.toLocaleString());
+  텍스트설정('요약-타손건수', nc); 텍스트설정('요약-타손금액', ns.toLocaleString());
+  const 가동률 = 상태.회원목록.length ? Math.round(활성/상태.회원목록.length*100) : 0;
+  텍스트설정('대시-가동률', 가동률+'%');
+  텍스트설정('대시-가동명수', 활성+'명 가동');
+  const bar = document.getElementById('대시-가동바'); if(bar) bar.style.width = 가동률+'%';
+}
+
+/* ─────────────────────────────────────
+  회비 수납 그리드
+───────────────────────────────────── */
+function 월회비금액() {
+  return parseInt((document.getElementById('회비금액')||{}).textContent.replace(/,/g,'')) || 30000;
+}
+function 회비그리드렌더() {
+  const tb = document.getElementById('회비그리드'); if(!tb) return; tb.innerHTML = '';
+  const 단가 = 월회비금액();
+  상태.회원목록.forEach(m => {
+    if (!상태.회비납부현황[m.id]) 상태.회비납부현황[m.id] = [0,0,0,0,0,0,0,0,0,0,0,0];
+    const 납부배열 = 상태.회비납부현황[m.id];
+    const 납부수 = 납부배열.reduce((a,v)=>a+v, 0);
+    let 셀HTML = '';
+    for (let i = 0; i < 12; i++) {
+      const 납부됨 = 납부배열[i] === 1;
+      셀HTML += `<td class="회비셀 ${납부됨?'완납':'미납'}" onclick="회비셀토글(${m.id},${i},this)">${납부됨?'O':'X'}</td>`;
+    }
+    tb.innerHTML += `<tr><td class="이름셀">${m.이름}</td>${셀HTML}<td class="회비합계">₩${(납부수*단가).toLocaleString()}</td></tr>`;
+  });
+  장부계산();
+}
+function 회비셀토글(id, idx, el) {
+  if (!상태.회비납부현황[id]) 상태.회비납부현황[id] = [0,0,0,0,0,0,0,0,0,0,0,0];
+  const 이전 = 상태.회비납부현황[id][idx] === 1;
+  상태.회비납부현황[id][idx] = 이전 ? 0 : 1;
+  el.className = '회비셀 ' + (이전 ? '미납' : '완납');
+  el.textContent = 이전 ? 'X' : 'O';
+  const 납부수 = 상태.회비납부현황[id].reduce((a,v)=>a+v, 0);
+  el.closest('tr').querySelector('.회비합계').textContent = '₩' + (납부수 * 월회비금액()).toLocaleString();
+  장부계산(); 저장예약();
+}
+
+/* ─────────────────────────────────────
+  입출금 장부
+───────────────────────────────────── */
+function 장부계산() {
+  const 단가 = 월회비금액(); let 회비합계 = 0;
+  for (const id in 상태.회비납부현황) 회비합계 += (상태.회비납부현황[id]||[]).reduce((a,v)=>a+v,0) * 단가;
+  텍스트설정('회비자동합산', '₩' + 회비합계.toLocaleString());
+  let 수입 = 회비합계, 지출 = 0;
+  document.querySelectorAll('#입출금장부 tr').forEach(tr => {
+    if (tr.dataset.고정) return;
+    const 선택 = tr.querySelector('.구분선택'), 금액el = tr.querySelector('.장부금액');
+    if (!선택||!금액el) return;
+    const 금액 = parseInt(금액el.textContent.replace(/,/g,'')) || 0;
+    if (선택.value === '입금') { 수입+=금액; 금액el.style.color='var(--sage)'; }
+    else { 지출+=금액; 금액el.style.color='var(--pink)'; }
+  });
+  const 잔액 = 수입 - 지출;
+  텍스트설정('장부-수입', '₩'+수입.toLocaleString());
+  텍스트설정('장부-지출', '₩'+지출.toLocaleString());
+  텍스트설정('장부-잔액', '₩'+잔액.toLocaleString());
+  텍스트설정('대시-잔액', '₩'+잔액.toLocaleString());
+}
+function 장부행HTML(번호, 날짜, 구분, 적요, 금액, 비고) {
+  const n = new Date(), p = v=>v.toString().padStart(2,'0');
+  const 오늘 = 날짜 || (n.getFullYear()+'-'+p(n.getMonth()+1)+'-'+p(n.getDate()));
+  return `<td style="text-align:center;color:var(--t3);font-size:10px">${번호}</td>
+    <td contenteditable="true" onblur="저장예약()" style="font-size:11px">${오늘}</td>
+    <td style="text-align:center">
+      <select class="구분선택" onchange="저장예약();장부계산()">
+        <option value="지출" ${(구분||'지출')==='지출'?'selected':''}>지출</option>
+        <option value="입금" ${(구분||'지출')==='입금'?'selected':''}>입금</option>
+      </select>
+    </td>
+    <td contenteditable="true" onblur="저장예약()" style="font-size:11px">${적요||'거래 내역 기입'}</td>
+    <td style="text-align:right">₩<span contenteditable="true" class="장부금액"
+      onblur="저장예약();장부계산()"
+      style="font-family:var(--fm);font-weight:700;color:var(--pink)">${금액||0}</span></td>
+    <td contenteditable="true" onblur="저장예약()" class="비고셀">${비고||'비고'}</td>
+    <td style="text-align:center"><button class="삭제버튼" onclick="장부행삭제(this)">×</button></td>`;
+}
+function 장부행추가() {
+  const tb = document.getElementById('입출금장부');
+  const 번호 = tb.children.length + 1;
+  const tr = document.createElement('tr');
+  tr.innerHTML = 장부행HTML(번호, '', '지출', '', 0, '');
+  tb.appendChild(tr); 장부계산();
+}
+function 장부행삭제(btn) {
+  btn.closest('tr').remove();
+  document.querySelectorAll('#입출금장부 tr').forEach((tr,i) => {
+    const c = tr.querySelector('td:first-child');
+    if (c && !tr.dataset.고정) c.textContent = i + 1;
+  });
+  장부계산(); 저장예약();
+}
+
+/* ─────────────────────────────────────
+  전체 재계산
+───────────────────────────────────── */
+function 전체재계산() {
+  const avg = 상태.회원목록.length ? 상태.회원목록.reduce((a,m)=>a+m.에버리지,0)/상태.회원목록.length : 0;
+  텍스트설정('평균표시', avg.toFixed(1));
+  텍스트설정('대시-에버리지', avg.toFixed(1));
+  텍스트설정('대시-회원수', 상태.회원목록.length);
+  텍스트설정('탭-회원수', 상태.회원목록.length);
+  가동요약계산();
+  장부계산();
+}
+
+/* ─────────────────────────────────────
+  유틸리티
+───────────────────────────────────── */
+function 텍스트설정(id, 값) { const el = document.getElementById(id); if(el) el.textContent = 값; }
+function 동기화상태(유형, 메시지) {
+  const 점 = document.getElementById('동기화점'), 텍 = document.getElementById('동기화텍스트');
+  if(점) 점.className = '동기화점 ' + (유형==='연결됨'?'연결됨':유형==='오류'?'오류':'로딩중');
+  if(텍) 텍.textContent = 메시지;
+}
+function 공유주소설정() {
+  const el = document.getElementById('공유주소'); if(el) el.textContent = window.location.href;
+}
+function 주소복사() {
+  const url = window.location.href;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url)
+      .then(() => 토스트보기('🔗 링크 복사 완료! 카카오톡 단체방에 공유하세요'))
+      .catch(() => 폴백복사(url));
+  } else 폴백복사(url);
+}
+function 폴백복사(텍스트) {
+  const inp = document.createElement('textarea');
+  inp.value = 텍스트; inp.style.cssText = 'position:fixed;opacity:0';
+  document.body.appendChild(inp); inp.select();
+  document.execCommand('copy'); document.body.removeChild(inp);
+  토스트보기('🔗 링크 복사 완료!');
+}
+function 토스트보기(메시지) {
+  const t = document.getElementById('토스트메시지'); if(!t) return;
+  t.textContent = 메시지; t.classList.add('보임');
+  setTimeout(() => t.classList.remove('보임'), 3500);
+}
+
+/* ─────────────────────────────────────
+  앱 시작
+───────────────────────────────────── */
+function 앱시작() {
+  공유주소설정();
+  데이터불러오기().then(() => { if(모드==='공유') 폴링시작(); });
+  전체재계산();
+  회원목록렌더();
+}
+
+// 진입점: GAS 주소가 이미 저장되어 있으면 바로 시작
+if (GAS주소) {
+  document.getElementById('설정화면').style.display = 'none';
+  모드 = '공유';
+  앱시작();
+} else {
+  document.getElementById('GAS주소입력').value = '';
+  동기화상태('오류', '설정 필요 — 위 설정 화면을 먼저 완료해주세요');
+  공유주소설정();
+  전체재계산();
+  회원목록렌더();
+}
+</script>
+</body>
+</html>
