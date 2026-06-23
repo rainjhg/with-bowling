@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>🎳 with 볼링 클럽</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#e8e4df; --bg2:#ede9e4;
+  --nm-out: 6px 6px 14px #c6c2bd, -6px -6px 14px #ffffff;
+  --nm-in:  inset 4px 4px 10px #c6c2bd, inset -4px -4px 10px #ffffff;
+  --nm-btn: 4px 4px 10px #c6c2bd, -4px -4px 10px #ffffff;
+  --nm-press: inset 3px 3px 8px #c6c2bd, inset -3px -3px 8px #ffffff;
+  --sage:#7fa898; --sage4:#e0efec;
+  --lav:#9b90c2; --lav4:#eceaf6;
+  --pink:#e88fa0; --pk2:#f0b3bf;
+  --amb:#d4a04a;
+  --t1:#3d3a36; --t2:#7a7570; --t3:#a09a95;
+  --bd:rgba(160,154,149,.18);
+  --r:18px; --rs:12px;
+  --f:'Noto Sans KR',sans-serif; --fm:'DM Mono',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--f);background:var(--bg);color:var(--t1);min-height:100vh;overflow-x:hidden;font-size:13px;-webkit-tap-highlight-color:transparent}
+#app {max-width:980px;margin:0 auto;padding:16px 14px 90px}
+
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:16px 22px;border-radius:var(--r);box-shadow:var(--nm-out);background:var(--bg2);margin-bottom:14px;flex-wrap:wrap;gap:10px}
+.hdr-l{display:flex;align-items:center;gap:12px}
+.hdr-ico{width:48px;height:48px;border-radius:13px;box-shadow:var(--nm-btn);background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.club-name{border:none;background:transparent;outline:none;font-family:var(--f);font-size:20px;font-weight:900;color:var(--t1);width:240px;max-width:100%;padding:4px 0;caret-color:var(--sage)}
+.club-name::placeholder{color:var(--t3);font-size:15px;font-weight:400}
+.hdr-sub{font-size:10px;color:var(--t3);margin-top:2px}
+.hdr-r{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.save-pill{display:flex;align-items:center;gap:6px;padding:7px 13px;border-radius:30px;box-shadow:var(--nm-btn);background:var(--bg2);font-size:10px;color:var(--t2);cursor:pointer;user-select:none}
+.save-pill:active{box-shadow:var(--nm-press)}
+.save-dot{width:7px;height:7px;border-radius:50%;background:var(--sage);animation:pulse 2s infinite;flex-shrink:0}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.ibtn{width:36px;height:36px;border-radius:10px;box-shadow:var(--nm-btn);background:var(--bg2);border:none;display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer;color:var(--t2)}
+.ibtn:active{box-shadow:var(--nm-press);transform:scale(.94)}
+
+.share-banner{display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:var(--rs);box-shadow:var(--nm-in);background:var(--bg2);margin-bottom:14px;flex-wrap:wrap}
+.share-url{flex:1;font-family:var(--fm);font-size:10px;color:var(--sage);word-break:break-all;min-width:100px}
+.copy-btn{padding:6px 14px;border-radius:20px;box-shadow:var(--nm-btn);background:var(--bg2);border:none;font-size:10px;font-weight:700;color:var(--sage);cursor:pointer;font-family:var(--f);white-space:nowrap}
+.copy-btn:active{box-shadow:var(--nm-press)}
+
+.info-banner{display:flex;align-items:flex-start;gap:10px;padding:12px 16px;border-radius:var(--rs);background:rgba(127,168,152,.08);border-left:3px solid var(--sage);margin-bottom:14px;font-size:11px;color:var(--t2);line-height:1.7}
+
+.clock-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+@media(max-width:500px){.clock-row{grid-template-columns:1fr}}
+.analog-card{padding:18px;border-radius:var(--r);box-shadow:var(--nm-out);background:var(--bg2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.greeting{font-size:13px;font-weight:600;color:var(--t1);align-self:flex-start}
+.greeting span{color:var(--sage);font-weight:700}
+.sub-greeting{font-size:10px;color:var(--t3);align-self:flex-start;margin-bottom:10px}
+.clock-face{width:98px;height:98px;border-radius:50%;box-shadow:var(--nm-out);background:var(--bg2);position:relative;display:flex;align-items:center;justify-content:center}
+.clock-num{position:absolute;font-size:8px;font-weight:600;color:var(--t3);font-family:var(--fm)}
+.clock-num.n12{top:6px;left:50%;transform:translateX(-50%)}
+.clock-num.n3{right:7px;top:50%;transform:translateY(-50%)}
+.clock-num.n6{bottom:6px;left:50%;transform:translateX(-50%)}
+.clock-num.n9{left:7px;top:50%;transform:translateY(-50%)}
+.hand{position:absolute;bottom:50%;left:50%;transform-origin:bottom center;border-radius:3px}
+.hand.hr{width:3px;height:25px;background:var(--t1);margin-left:-1.5px}
+.hand.mn{width:2px;height:35px;background:var(--t2);margin-left:-1px}
+.hand.sc{width:1.5px;height:39px;background:var(--pink);margin-left:-.75px}
+.center-dot{width:7px;height:7px;border-radius:50%;background:var(--pink);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:5}
+.digital-card{padding:18px;border-radius:var(--r);box-shadow:var(--nm-out);background:var(--bg2);display:flex;flex-direction:column;justify-content:center}
+.digital-time{font-family:var(--fm);font-size:40px;font-weight:500;color:var(--t1);padding:10px 16px;border-radius:var(--rs);box-shadow:var(--nm-in);background:var(--bg2);letter-spacing:4px;margin-bottom:10px;text-align:center}
+.day-name{font-size:17px;font-weight:700;color:var(--t1);margin-bottom:2px}
+.date-str{font-size:10px;color:var(--t2);font-family:var(--fm)}
+
+.yr-bar{padding:12px 18px;border-radius:var(--rs);box-shadow:var(--nm-in);background:var(--bg2);margin-bottom:14px;display:flex;align-items:center;gap:12px}
+.yr-label{font-size:11px;font-weight:600;color:var(--t2);white-space:nowrap}
+.yr-track{flex:1;height:5px;border-radius:3px;box-shadow:var(--nm-in);overflow:hidden}
+.yr-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--pink),var(--pk2));transition:width 1s ease}
+.yr-pct{font-family:var(--fm);font-size:12px;color:var(--pink);font-weight:500;min-width:36px;text-align:right}
+
+.dash-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+@media(max-width:600px){.dash-grid{grid-template-columns:repeat(2,1fr)}}
+.dc{padding:15px 13px;border-radius:var(--r);box-shadow:var(--nm-out);background:var(--bg2);transition:box-shadow .2s}
+.dc.cp{cursor:pointer}
+.dc.cp:hover{box-shadow:8px 8px 18px #bfbbb6,-8px -8px 18px #fff}
+.dlabel{font-size:8px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px}
+.dval{font-family:var(--fm);font-size:20px;font-weight:500;color:var(--t1);line-height:1}
+.dsub{font-size:9px;color:var(--t3);margin-top:5px}
+.dbar{height:3px;border-radius:2px;box-shadow:var(--nm-in);margin-top:8px;overflow:hidden}
+.dbar-f{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--pink),var(--pk2));transition:width .8s}
+
+.nav-tabs{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;margin-bottom:16px}
+@media(max-width:900px){.nav-tabs{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:600px){.nav-tabs{display:none}}
+.ntab{padding:10px 5px;border-radius:var(--rs);box-shadow:var(--nm-btn);background:var(--bg2);color:var(--t2);font-size:9px;font-weight:600;cursor:pointer;transition:all .2s;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px;border:none;font-family:var(--f)}
+.ntab:hover{box-shadow:6px 6px 14px #bfbbb6,-6px -6px 14px #fff}
+.ntab.active{box-shadow:var(--nm-press);color:var(--sage);background:linear-gradient(135deg,#e0f0ed,#eae6e1)}
+.ntab .ti{font-size:16px}
+
+.mob-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(237,233,228,.97);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 -3px 16px rgba(0,0,0,.07);border-top:1px solid var(--bd);padding:6px 0 max(6px,env(safe-area-inset-bottom));z-index:100;overflow-x:auto}
+@media(max-width:600px){.mob-nav{display:flex;justify-content:space-around}}
+.mtab{display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 6px;cursor:pointer;color:var(--t3);font-size:7px;font-weight:600;border-radius:8px;font-family:var(--f);flex-shrink:0}
+.mtab .mi{font-size:17px}
+.mtab.active{color:var(--sage)}
+
+.sec{display:none;animation:fdIn .28s ease}
+.sec.active{display:block}
+@keyframes fdIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.panel{padding:20px;border-radius:var(--r);box-shadow:var(--nm-out);background:var(--bg2);margin-bottom:12px}
+.ptitle{font-size:13px;font-weight:700;color:var(--t1);display:flex;align-items:center;gap:7px;margin-bottom:4px}
+.psub{font-size:10px;color:var(--t3);margin-bottom:14px;line-height:1.65}
+
+.concept-grid{display:grid;grid-template-columns:230px 1fr;gap:12px}
+@media(max-width:700px){.concept-grid{grid-template-columns:1fr}}
+.profile-card{padding:20px;border-radius:var(--r);box-shadow:var(--nm-out);background:var(--bg2);text-align:center}
+.pe-w{width:62px;height:62px;border-radius:14px;box-shadow:var(--nm-out);background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 12px}
+.pname{font-size:16px;font-weight:700;color:var(--t1);margin-bottom:2px;outline:none}
+.porg{font-size:9px;color:var(--sage);font-weight:600;letter-spacing:1.5px;text-transform:uppercase;outline:none}
+.pstat-list{margin-top:14px}
+.pstat{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--bd);font-size:11px}
+.pstat:last-child{border-bottom:none}
+.pstat-k{color:var(--t2)}
+.pstat-v{font-weight:700;color:var(--t1);outline:none}
+.pstat-v.sage{color:var(--sage)}
+.cta-btn{width:100%;margin-top:14px;padding:11px;border-radius:var(--rs);background:var(--sage);color:#fff;font-size:11px;font-weight:700;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;box-shadow:4px 4px 10px rgba(127,168,152,.4),-2px -2px 8px rgba(255,255,255,.6);transition:all .2s;font-family:var(--f)}
+.cta-btn:hover{filter:brightness(1.06);transform:translateY(-1px)}
+.cta-btn:active{transform:scale(.96)}
+.clause{padding:13px 15px;border-radius:var(--rs);box-shadow:var(--nm-in);background:var(--bg2);margin-bottom:10px;border-left:4px solid var(--sage)}
+.clause.gold{border-left-color:var(--amb)}
+.clause.lav{border-left-color:var(--lav)}
+.clause-t{font-size:12px;font-weight:700;color:var(--t1);margin-bottom:6px;outline:none}
+.clause-b{font-size:10px;color:var(--t2);line-height:1.75;outline:none}
+[contenteditable]:hover{background:rgba(127,168,152,.07);border-radius:4px}
+[contenteditable]:focus{background:rgba(127,168,152,.13);border-radius:4px;outline:none;box-shadow:0 0 0 1.5px rgba(127,168,152,.35)}
+
+.values-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media(max-width:560px){.values-grid{grid-template-columns:1fr}}
+.vc{padding:13px;border-radius:var(--rs);box-shadow:var(--nm-in);background:var(--bg2)}
+.vhdr{display:flex;align-items:center;gap:7px;margin-bottom:9px;padding-bottom:8px;border-bottom:1px solid var(--bd)}
+.vnum{width:20px;height:20px;border-radius:6px;background:var(--sage4);color:var(--sage);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;box-shadow:2px 2px 4px #c6c2bd,-2px -2px 4px #fff}
+.vt-m{font-size:9px;color:var(--sage);font-weight:600}
+.vt-s{font-size:11px;font-weight:700;color:var(--t1);margin-top:1px;outline:none}
+.vi{display:flex;gap:4px;margin-bottom:5px;font-size:10px}
+.vi:last-child{margin-bottom:0}
+.do{color:var(--sage);font-weight:700;flex-shrink:0;padding-top:1px}
+.dont{color:var(--pink);font-weight:700;flex-shrink:0;padding-top:1px}
+.vt{color:var(--t2);line-height:1.6;outline:none}
+
+.toolbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.toolbar-r{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.pbtn{padding:7px 14px;border-radius:30px;font-size:10px;font-weight:600;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:var(--nm-btn);background:var(--bg2);color:var(--t2);transition:all .15s;font-family:var(--f)}
+.pbtn:active{box-shadow:var(--nm-press)}
+.pbtn.sage{background:var(--sage4);color:var(--sage)}
+.pbtn.pink{background:#fde8eb;color:var(--pink)}
+.avg-pill{padding:6px 12px;border-radius:30px;box-shadow:var(--nm-in);background:var(--bg2);font-size:10px;color:var(--t2)}
+.avg-pill span{color:var(--sage);font-weight:700}
+.tbl-w{border-radius:var(--rs);overflow:auto;box-shadow:var(--nm-in);background:var(--bg2)}
+table{width:100%;border-collapse:collapse;font-size:11px}
+thead tr{background:rgba(127,168,152,.07)}
+th{padding:10px 9px;font-size:8px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:1.2px;white-space:nowrap;font-family:var(--f)}
+td{padding:9px 9px;border-bottom:1px solid rgba(160,154,149,.1);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:rgba(127,168,152,.04)}
+td[contenteditable]{outline:none;cursor:text;border-radius:4px;transition:background .12s}
+td[contenteditable]:hover{background:rgba(127,168,152,.1)}
+td[contenteditable]:focus{background:rgba(127,168,152,.16);box-shadow:0 0 0 1.5px rgba(127,168,152,.4)}
+.badge{display:inline-flex;align-items:center;justify-content:center;padding:3px 10px;border-radius:30px;font-size:9px;font-weight:700;cursor:pointer;white-space:nowrap;box-shadow:2px 2px 5px #c6c2bd,-2px -2px 5px #fff;font-family:var(--f);user-select:none}
+.badge.green{background:var(--sage4);color:var(--sage)}
+.badge.red{background:#fde8eb;color:var(--pink)}
+.badge:active{box-shadow:inset 2px 2px 4px #c6c2bd,inset -2px -2px 4px #fff}
+.dbtn{width:24px;height:24px;border-radius:7px;border:none;cursor:pointer;box-shadow:var(--nm-btn);background:var(--bg2);color:var(--pink);font-size:13px;display:flex;align-items:center;justify-content:center}
+.dbtn:active{box-shadow:var(--nm-press)}
+select{background:var(--bg2);border:none;box-shadow:var(--nm-in);color:var(--t1);font-size:10px;font-weight:600;font-family:var(--f);border-radius:7px;padding:4px 8px;cursor:pointer;outline:none}
+
+.amb{border-radius:var(--rs);box-shadow:var(--nm-in);background:var(--bg2);margin-bottom:10px;overflow:hidden}
+.amb-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;cursor:pointer;background:rgba(127,168,152,.05);border-bottom:1px solid var(--bd);user-select:none}
+.amb-hdr:hover{background:rgba(127,168,152,.09)}
+.amb-name{font-size:12px;font-weight:700;color:var(--t1);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.amb-tag{padding:2px 8px;border-radius:20px;font-size:9px;font-weight:700}
+.amb-tag.s{background:var(--sage4);color:var(--sage)}
+.amb-tag.l{background:var(--lav4);color:var(--lav)}
+.amb-tag.a{background:#fef3e2;color:var(--amb)}
+.amb-tag.off{background:rgba(160,154,149,.12);color:var(--t3)}
+.amb-sum{display:flex;gap:8px;align-items:center}
+.amb-total{font-family:var(--fm);font-size:11px;font-weight:500}
+.chev{font-size:10px;color:var(--t3);transition:transform .2s;display:inline-block}
+.chev.open{transform:rotate(180deg)}
+.amb-body{padding:12px 14px;display:none}
+.cr{display:grid;grid-template-columns:1fr 60px 110px 26px;gap:6px;align-items:center;margin-bottom:4px}
+.ci{border:none;background:transparent;outline:none;font-family:var(--f);font-size:11px;color:var(--t1);padding:5px 8px;border-radius:7px;box-shadow:var(--nm-in);width:100%;transition:box-shadow .15s}
+.ci:focus{box-shadow:0 0 0 1.5px var(--sage),var(--nm-in)}
+.ci::placeholder{color:var(--t3);font-size:10px}
+.ci.mono{font-family:var(--fm)}
+.cr-type{display:flex;gap:10px;margin-bottom:8px;padding-left:2px;flex-wrap:wrap}
+.cr-type label{display:flex;align-items:center;gap:3px;font-size:10px;cursor:pointer;color:var(--t2)}
+.add-c-btn{padding:5px 12px;border-radius:20px;box-shadow:var(--nm-btn);background:var(--bg2);border:none;font-size:9px;font-weight:700;cursor:pointer;font-family:var(--f);margin-right:6px;margin-top:6px;display:inline-flex;align-items:center;gap:3px;color:var(--sage)}
+.add-c-btn:active{box-shadow:var(--nm-press)}
+.sum-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+@media(max-width:520px){.sum-row{grid-template-columns:1fr}}
+.sc2{padding:14px;border-radius:var(--rs);box-shadow:var(--nm-in);background:var(--bg2)}
+.slabel{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px;font-family:var(--f)}
+.slabel.sage{color:var(--sage)}.slabel.lav{color:var(--lav)}.slabel.amb{color:var(--amb)}
+.sval{font-family:var(--fm);font-size:15px;font-weight:500;color:var(--t1)}
+.ssub{font-size:10px;color:var(--t3);margin-top:3px}
+
+.lsummary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+@media(max-width:520px){.lsummary{grid-template-columns:1fr}}
+.lc{padding:14px;border-radius:var(--rs);box-shadow:var(--nm-in);background:var(--bg2)}
+.ll{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px;font-family:var(--f)}
+.ll.g{color:var(--sage)}.ll.r{color:var(--pink)}.ll.b{color:var(--lav)}
+.lval{font-family:var(--fm);font-size:17px;font-weight:500;color:var(--t1)}
+.lsub2{font-size:9px;color:var(--t3);margin-top:2px}
+.d-h3{font-size:12px;font-weight:700;color:var(--t1);margin-bottom:3px}
+.d-p{font-size:10px;color:var(--t3);margin-bottom:11px;line-height:1.6}
+.dues-cell{padding:7px 4px;cursor:pointer;font-size:10px;font-weight:700;transition:all .12s;user-select:none;text-align:center;border-right:1px solid rgba(160,154,149,.07);font-family:var(--fm)}
+.dues-cell.paid{color:var(--sage);background:rgba(127,168,152,.1)}
+.dues-cell.unpaid{color:var(--pink);background:rgba(232,143,160,.05)}
+.dues-cell:hover{filter:brightness(1.15);transform:scale(1.1)}
+.dues-total{font-family:var(--fm);font-size:10px;color:var(--lav);font-weight:500;padding:7px 9px;background:rgba(155,144,194,.06)}
+.ncd{font-weight:600;color:var(--t1);padding:9px 11px;font-size:11px;white-space:nowrap;min-width:65px}
+.mth-th{font-size:8px;padding:9px 3px;color:var(--t3);font-weight:700}
+.lm{font-size:10px;color:var(--t3);font-style:italic}
+
+.acc-card{padding:24px;border-radius:var(--r);box-shadow:var(--nm-out);background:var(--bg2);text-align:center;max-width:420px;margin:0 auto}
+.acc-logo{width:56px;height:56px;border-radius:50%;box-shadow:var(--nm-out);background:var(--sage4);display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 14px}
+.acc-bank{font-size:13px;color:var(--t2);font-weight:600;outline:none;margin-bottom:6px}
+.acc-num{font-family:var(--fm);font-size:22px;font-weight:700;color:var(--t1);padding:14px 18px;border-radius:var(--rs);box-shadow:var(--nm-in);background:var(--bg2);margin:10px 0;letter-spacing:1px;outline:none;word-break:break-all}
+.acc-owner{font-size:12px;color:var(--t2);margin-top:8px}
+.acc-owner span{font-weight:700;color:var(--t1);outline:none}
+.acc-copy-btn{width:100%;margin-top:16px;padding:12px;border-radius:var(--rs);background:var(--sage);color:#fff;font-size:12px;font-weight:700;border:none;cursor:pointer;box-shadow:4px 4px 10px rgba(127,168,152,.4),-2px -2px 8px rgba(255,255,255,.6);font-family:var(--f)}
+.acc-copy-btn:active{transform:scale(.97)}
+.acc-note{font-size:10px;color:var(--t3);margin-top:14px;line-height:1.7;text-align:left;background:rgba(127,168,152,.06);padding:12px 14px;border-radius:var(--rs);outline:none;white-space:pre-wrap}
+
+.notice-write{padding:16px;border-radius:var(--rs);box-shadow:var(--nm-in);background:var(--bg2);margin-bottom:14px}
+.notice-input{width:100%;border:none;background:transparent;outline:none;font-family:var(--f);font-size:12px;color:var(--t1);resize:vertical;min-height:60px;line-height:1.6}
+.notice-input::placeholder{color:var(--t3)}
+.notice-add-btn{margin-top:10px;padding:8px 18px;border-radius:20px;background:var(--sage);color:#fff;font-size:11px;font-weight:700;border:none;cursor:pointer;box-shadow:var(--nm-btn);font-family:var(--f)}
+.notice-add-btn:active{transform:scale(.96)}
+.notice-list{display:flex;flex-direction:column;gap:10px}
+.notice-card{padding:16px;border-radius:var(--rs);box-shadow:var(--nm-in);background:var(--bg2);border-left:4px solid var(--sage);position:relative}
+.notice-card.pinned{border-left-color:var(--amb)}
+.notice-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.notice-pin{font-size:11px;color:var(--amb);font-weight:700;display:flex;align-items:center;gap:3px}
+.notice-date{font-size:9px;color:var(--t3);font-family:var(--fm)}
+.notice-body{font-size:12px;color:var(--t2);line-height:1.7;white-space:pre-wrap;outline:none}
+.notice-del{position:absolute;top:10px;right:10px;width:22px;height:22px;border-radius:6px;border:none;cursor:pointer;box-shadow:var(--nm-btn);background:var(--bg2);color:var(--pink);font-size:12px;display:flex;align-items:center;justify-content:center}
+.notice-del:active{box-shadow:var(--nm-press)}
+.notice-empty{text-align:center;color:var(--t3);padding:30px;font-size:12px}
+
+.fdr{animation:fdR .22s ease forwards}
+@keyframes fdR{from{opacity:0;transform:translateX(-4px)}to{opacity:1;transform:translateX(0)}}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--t1);color:#fff;padding:9px 20px;border-radius:30px;font-size:11px;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;white-space:nowrap;max-width:90vw;text-align:center}
+.toast.show{opacity:1}
+
+@media print{
+  .mob-nav,.nav-tabs,.toolbar .pbtn,.dbtn,.share-banner,.hdr-r,.cta-btn,.add-c-btn,.info-banner{display:none!important}
+  body{background:#fff!important;color:#2d2a27!important}
+  .sec{display:block!important;margin-bottom:20px!important}
+  .panel,.profile-card,.clause,.vc,.sc2,.lc,.tbl-w,.dc,.amb,.acc-card,.notice-card{background:#fff!important;box-shadow:none!important;border:1px solid #ddd!important}
+  #app{padding:0;max-width:100%}
+  @page{size:A4;margin:12mm}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+<header class="hdr">
+  <div class="hdr-l">
+    <div class="hdr-ico">🎳</div>
+    <div>
+      <input class="club-name" id="club-name-input" type="text" placeholder="동호회 이름" value="with 볼링 클럽" maxlength="30" autocomplete="off" oninput="scheduleSave()">
+      <div class="hdr-sub">메트라이프금융서비스 볼링 동호회</div>
+    </div>
+  </div>
+  <div class="hdr-r">
+    <div class="save-pill" onclick="manualSave()">
+      <span class="save-dot"></span>
+      <span id="save-text">자동 저장됨</span>
+    </div>
+    <button class="ibtn" onclick="window.print()" title="인쇄">🖨️</button>
+  </div>
+</header>
+
+<div class="info-banner">
+  💡 <b>이용 안내</b> — 이 페이지는 이 기기(브라우저)에 자동 저장됩니다. 총무님이 입력 후 파일을 다시 GitHub에 올리면 모든 회원이 최신 내용을 볼 수 있어요. 평소엔 이 링크로 접속해 명단·실적·공지를 확인하세요.
+</div>
+
+<div class="share-banner">
+  <span style="font-size:15px">🔗</span>
+  <span style="font-size:10px;color:var(--t2);font-weight:600;white-space:nowrap">이 링크를 카카오톡 단체방에 공유하세요</span>
+  <span class="share-url" id="share-url"></span>
+  <button class="copy-btn" onclick="copyUrl()">📋 링크 복사</button>
+</div>
+
+<div class="clock-row">
+  <div class="analog-card">
+    <div class="greeting">안녕하세요, <span id="hello-month">6월</span>입니다</div>
+    <div class="sub-greeting">오늘도 스트라이크 하는 하루 되세요!</div>
+    <div class="clock-face">
+      <span class="clock-num n12">12</span><span class="clock-num n3">3</span>
+      <span class="clock-num n6">6</span><span class="clock-num n9">9</span>
+      <div class="hand hr" id="hr-hand"></div>
+      <div class="hand mn" id="mn-hand"></div>
+      <div class="hand sc" id="sc-hand"></div>
+      <div class="center-dot"></div>
+    </div>
+  </div>
+  <div class="digital-card">
+    <div class="digital-time" id="digital-time">00:00</div>
+    <div class="day-name" id="day-name"></div>
+    <div class="date-str" id="date-str"></div>
+  </div>
+</div>
+
+<div class="yr-bar">
+  <div class="yr-label">올해가 얼마나 지났을까요?</div>
+  <div class="yr-track"><div class="yr-fill" id="yr-fill" style="width:0%"></div></div>
+  <div class="yr-pct" id="yr-pct">0%</div>
+</div>
+
+<div class="dash-grid">
+  <div class="dc">
+    <div class="dlabel">회원 수</div>
+    <div class="dval" id="dash-members">0</div>
+    <div class="dsub">등록 FP 총원</div>
+  </div>
+  <div class="dc">
+    <div class="dlabel">평균 에버리지</div>
+    <div class="dval" id="dash-avg">0.0</div>
+    <div class="dsub">점</div>
+  </div>
+  <div class="dc cp" onclick="goTab('tab-active')">
+    <div class="dlabel">당월 가동률</div>
+    <div class="dval" id="dash-active">0%</div>
+    <div class="dsub" id="dash-active-sub">0명 가동</div>
+    <div class="dbar"><div class="dbar-f" id="dash-active-bar" style="width:0%"></div></div>
+  </div>
+  <div class="dc cp" onclick="goTab('tab-ledger')">
+    <div class="dlabel">동호회 잔액</div>
+    <div class="dval" id="dash-balance" style="font-size:15px">₩0</div>
+    <div class="dsub">회비 통장</div>
+  </div>
+</div>
+
+<nav class="nav-tabs">
+  <button class="ntab active" id="btn-tab-concept" onclick="goTab('tab-concept')"><span class="ti">✨</span>클럽 컨셉</button>
+  <button class="ntab" id="btn-tab-values" onclick="goTab('tab-values')"><span class="ti">🏆</span>핵심 가치</button>
+  <button class="ntab" id="btn-tab-members" onclick="goTab('tab-members')"><span class="ti">👥</span>회원 명단</button>
+  <button class="ntab" id="btn-tab-active" onclick="goTab('tab-active')"><span class="ti">📈</span>가동 실적</button>
+  <button class="ntab" id="btn-tab-ledger" onclick="goTab('tab-ledger')"><span class="ti">💰</span>회비 장부</button>
+  <button class="ntab" id="btn-tab-notice" onclick="goTab('tab-notice')"><span class="ti">📢</span>공지사항</button>
+  <button class="ntab" id="btn-tab-account" onclick="goTab('tab-account')"><span class="ti">🏦</span>모임 계좌</button>
+</nav>
+
+<div id="tab-concept" class="sec active">
+  <div class="concept-grid">
+    <div class="profile-card">
+      <div class="pe-w">🎳</div>
+      <div class="pname" contenteditable="true" onblur="scheduleSave()">with 볼링 클럽</div>
+      <div class="porg" contenteditable="true" onblur="scheduleSave()">MetLife Financial Services</div>
+      <div class="pstat-list">
+        <div class="pstat"><span class="pstat-k">미션</span><span class="pstat-v" contenteditable="true" onblur="scheduleSave()">에버리지 동반 성장</span></div>
+        <div class="pstat"><span class="pstat-k">비전</span><span class="pstat-v" contenteditable="true" onblur="scheduleSave()">지점 신뢰도 1위 달성</span></div>
+        <div class="pstat"><span class="pstat-k">지점명</span><span class="pstat-v" contenteditable="true" onblur="scheduleSave()">00지점</span></div>
+        <div class="pstat"><span class="pstat-k">월정 회비</span><span class="pstat-v sage">₩<span id="dues-amount" contenteditable="true" onblur="scheduleSave();recalcAll()">30,000</span>원</span></div>
+      </div>
+      <button class="cta-btn" onclick="goTab('tab-active')">📊 가동현황 분석 보고</button>
+    </div>
+    <div class="panel">
+      <div class="ptitle">⚡ 메트라이프 시그니처 볼링 상품 특약</div>
+      <div class="psub">각 항목을 클릭하면 직접 수정할 수 있습니다.</div>
+      <div class="clause gold">
+        <div class="clause-t" contenteditable="true" onblur="scheduleSave()">💵 달러 보험 특약 (안전자산 확보형)</div>
+        <div class="clause-b" contenteditable="true" onblur="scheduleSave()">회원은 자신의 에버리지를 변동성 강한 하우스볼 상태로 두지 않고, 안전하게 '글로벌 안전 자산' (최소 에버리지 130 이상)으로 헷징할 권리와 의무를 지닙니다. 스코어가 100점 미만으로 폭락할 경우, 즉시 치킨 다리를 동료에게 양도하는 '통화 스와프'를 체결합니다.</div>
+      </div>
+      <div class="clause">
+        <div class="clause-t" contenteditable="true" onblur="scheduleSave()">🛡️ 종신 보험 특약 (평생 보장형)</div>
+        <div class="clause-b" contenteditable="true" onblur="scheduleSave()">본 동호회는 한 번 가입하면 탈퇴가 없습니다. 무릎이 닳는 순간까지 평생토록 공을 굴려야 하며, 투구 도중 '스플릿(위험 발생)'이 나더라도 남은 팀원들이 끝까지 책임지고 스페어 처리를 해주는 '유가족 보장 시스템'을 가동합니다.</div>
+      </div>
+      <div class="clause lav">
+        <div class="clause-t" contenteditable="true" onblur="scheduleSave()">📈 변액 보험 특약 (수익률 극대화형)</div>
+        <div class="clause-b" contenteditable="true" onblur="scheduleSave()">[변액종신] 볼링장 레인 오일 상태에 따라 공의 각도와 회전수를 기민하게 수정하여 최고의 점수(수익률)를 추구합니다. [변액연금] 전반전에 점수가 안 나오더라도, 마지막 10프레임 보너스 샷에서 대역전 스트라이크를 기록해 만회하는 볼러를 전적으로 보장합니다.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-values" class="sec">
+  <div class="panel">
+    <div class="ptitle">🏆 우리가 볼링 레인 위에서 일하는 법 (6대 핵심가치)</div>
+    <div class="psub">클릭하면 수정 가능합니다.</div>
+    <div class="values-grid">
+      <div class="vc"><div class="vhdr"><div class="vnum">1</div><div><div class="vt-m">고객 중심 →</div><div class="vt-s" contenteditable="true" onblur="scheduleSave()">동료 중심</div></div></div><div class="vi"><span class="do">●</span><div class="vt" contenteditable="true" onblur="scheduleSave()">동료 투구 시 어프로치 옆에서 조용히 대기하며 진정한 열정과 기를 보낸다.</div></div><div class="vi"><span class="dont">○</span><div class="vt" contenteditable="true" onblur="scheduleSave()">동료 신체 구조를 고려하지 않고 무리한 자세를 강요하지 않는다.</div></div></div>
+      <div class="vc"><div class="vhdr"><div class="vnum">2</div><div><div class="vt-m">신뢰와 투명성 →</div><div class="vt-s" contenteditable="true" onblur="scheduleSave()">스코어 투명성</div></div></div><div class="vi"><span class="do">●</span><div class="vt" contenteditable="true" onblur="scheduleSave()">공이 거터로 빠졌을 때 변명 없이 진실만을 공유한다.</div></div><div class="vi"><span class="dont">○</span><div class="vt" contenteditable="true" onblur="scheduleSave()">파울 라인을 밟았음에도 센서 고장을 틈타 득점이라 우기지 않는다.</div></div></div>
+      <div class="vc"><div class="vhdr"><div class="vnum">3</div><div><div class="vt-m">전문성과 혁신 →</div><div class="vt-s" contenteditable="true" onblur="scheduleSave()">구질의 혁신</div></div></div><div class="vi"><span class="do">●</span><div class="vt" contenteditable="true" onblur="scheduleSave()">유튜브 분석·프로 아대 사용법 등을 적극 도입해 전문성을 격상한다.</div></div><div class="vi"><span class="dont">○</span><div class="vt" contenteditable="true" onblur="scheduleSave()">"오직 하우스볼 막볼 직진"만 고수하며 새로운 훅 시도를 거부하지 않는다.</div></div></div>
+      <div class="vc"><div class="vhdr"><div class="vnum">4</div><div><div class="vt-m">책임감과 윤리 →</div><div class="vt-s" contenteditable="true" onblur="scheduleSave()">매너와 윤리</div></div></div><div class="vi"><span class="do">●</span><div class="vt" contenteditable="true" onblur="scheduleSave()">내가 굴린 공의 궤적과 결과에 대해 온전히 책임을 지며 매너를 준수한다.</div></div><div class="vi"><span class="dont">○</span><div class="vt" contenteditable="true" onblur="scheduleSave()">승리를 위해 상대 팀에게 방해 공작을 하지 않는다.</div></div></div>
+      <div class="vc"><div class="vhdr"><div class="vnum">5</div><div><div class="vt-m">팀워크와 포용 →</div><div class="vt-s" contenteditable="true" onblur="scheduleSave()">무차별 하이파이브</div></div></div><div class="vi"><span class="do">●</span><div class="vt" contenteditable="true" onblur="scheduleSave()">에버리지 격차를 뛰어넘어 거터든 스트라이크든 무차별 하이파이브로 단결한다.</div></div><div class="vi"><span class="dont">○</span><div class="vt" contenteditable="true" onblur="scheduleSave()">에버리지 낮은 회원을 팀에서 누락하거나 책임을 전가하지 않는다.</div></div></div>
+      <div class="vc"><div class="vhdr"><div class="vnum">6</div><div><div class="vt-m">열정과 도전 →</div><div class="vt-s" contenteditable="true" onblur="scheduleSave()">10번 핀 저격 정신</div></div></div><div class="vi"><span class="do">●</span><div class="vt" contenteditable="true" onblur="scheduleSave()">역전이 불가능해 보여도 마지막 찬스를 사수하기 위해 용감하게 전진 투구한다.</div></div><div class="vi"><span class="dont">○</span><div class="vt" contenteditable="true" onblur="scheduleSave()">"어차피 안 된다"며 시도하기 전에 패배주의에 빠지지 않는다.</div></div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-members" class="sec">
+  <div class="panel">
+    <div class="toolbar">
+      <div><div class="ptitle">👥 동호회 회원 관리 장부</div><div class="psub" style="margin-bottom:0">이름·역할·구질·에버리지를 클릭해 직접 편집하세요.</div></div>
+      <div class="toolbar-r">
+        <button class="pbtn sage" onclick="addMember()">＋ 신입 등록</button>
+        <button class="pbtn pink" onclick="clearMembers()">🗑 명단 비우기</button>
+        <div class="avg-pill">평균 에버리지 <span id="avg-display">0.0</span>점</div>
+      </div>
+    </div>
+    <div class="tbl-w">
+      <table>
+        <thead><tr>
+          <th style="text-align:center;width:32px">번호</th><th>이름</th><th>동호회 역할</th><th>개인 구질</th>
+          <th style="text-align:center">에버리지</th><th style="text-align:center">회비 현황</th>
+          <th style="text-align:center;width:32px">해촉</th>
+        </tr></thead>
+        <tbody id="members-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div id="tab-active" class="sec">
+  <div class="panel">
+    <div class="ptitle">📈 당월 영업 가동 실적 — 건별 상세 입력</div>
+    <div class="psub">이름 클릭 → 펼쳐짐 → ＋버튼으로 계약 추가 → 상품명·건수·금액 입력 → 총액 자동 계산</div>
+    <div id="active-blocks"></div>
+    <div class="sum-row">
+      <div class="sc2"><div class="slabel sage">● 메트라이프 총 계약</div><div class="sval"><span id="sum-met-cnt">0</span>건</div><div class="ssub">₩<span id="sum-met-amt">0</span></div></div>
+      <div class="sc2"><div class="slabel lav">● 타생보 총 계약</div><div class="sval"><span id="sum-oth-cnt">0</span>건</div><div class="ssub">₩<span id="sum-oth-amt">0</span></div></div>
+      <div class="sc2"><div class="slabel amb">● 타손보 총 계약</div><div class="sval"><span id="sum-non-cnt">0</span>건</div><div class="ssub">₩<span id="sum-non-amt">0</span></div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-ledger" class="sec">
+  <div class="panel">
+    <div class="ptitle">💰 회비 수납 &amp; 입출금 장부</div>
+    <div class="lsummary">
+      <div class="lc"><div class="ll g">총 입금액 (A)</div><div class="lval" id="ledger-income">₩0</div><div class="lsub2">회비 자동 합산 포함</div></div>
+      <div class="lc"><div class="ll r">총 지출액 (B)</div><div class="lval" id="ledger-expense">₩0</div></div>
+      <div class="lc"><div class="ll b">동호회 잔액 (A-B)</div><div class="lval" id="ledger-balance">₩0</div></div>
+    </div>
+    <div style="margin-bottom:18px">
+      <div class="d-h3">📅 연간 회비 수납 관리대장</div>
+      <div class="d-p">월 칸을 클릭하면 완납(O) ↔ 미납(X)으로 바뀝니다. 완납 금액은 장부에 자동 반영됩니다.</div>
+      <div class="tbl-w">
+        <table>
+          <thead><tr>
+            <th style="text-align:left;padding-left:11px">이름</th>
+            <th class="mth-th">1월</th><th class="mth-th">2월</th><th class="mth-th">3월</th><th class="mth-th">4월</th><th class="mth-th">5월</th><th class="mth-th">6월</th>
+            <th class="mth-th">7월</th><th class="mth-th">8월</th><th class="mth-th">9월</th><th class="mth-th">10월</th><th class="mth-th">11월</th><th class="mth-th">12월</th>
+            <th style="color:var(--lav);font-size:8px;padding:9px;font-weight:700">누적 수납</th>
+          </tr></thead>
+          <tbody id="dues-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div style="border-top:1px solid var(--bd);padding-top:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:11px;flex-wrap:wrap;gap:8px">
+        <div><div class="d-h3">📒 입출금 수납 대장</div><div class="d-p" style="margin-bottom:0">볼링장 대관·회식·시상 등 항목을 기록하고 정산합니다.</div></div>
+        <button class="pbtn sage" onclick="addLedgerRow()">＋ 내역 추가</button>
+      </div>
+      <div class="tbl-w">
+        <table>
+          <thead><tr>
+            <th style="text-align:center;width:32px">번호</th><th>거래 일자</th>
+            <th style="text-align:center;width:60px">구분</th><th>적요 (항목 내용)</th>
+            <th style="text-align:right">거래 금액</th><th>비고</th>
+            <th style="width:32px;text-align:center">삭제</th>
+          </tr></thead>
+          <tbody id="ledger-tbody">
+            <tr data-fixed="true">
+              <td style="text-align:center;color:var(--t3);font-size:10px">1</td>
+              <td class="lm">자동 계산</td>
+              <td style="text-align:center"><span class="badge green">입금</span></td>
+              <td style="font-weight:700;font-size:11px;color:var(--t1)">동호회 월정 연간 수납 회비 자동 합산</td>
+              <td style="text-align:right;font-weight:700;color:var(--sage);font-family:var(--fm);font-size:11px" id="auto-dues-cell">₩0</td>
+              <td class="lm">회비 납부대장 실시간 연동</td>
+              <td style="text-align:center;color:var(--t3)">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-notice" class="sec">
+  <div class="panel">
+    <div class="ptitle">📢 동호회 공지사항</div>
+    <div class="psub">모임 일정, 준비물, 안내사항 등을 자유롭게 작성하세요.</div>
+    <div class="notice-write">
+      <textarea class="notice-input" id="notice-input" placeholder="새 공지사항을 입력하세요. (예: 6월 모임은 6/19(금) 저녁 7시, OO볼링장입니다!)"></textarea>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px">
+        <label style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--t2);cursor:pointer">
+          <input type="checkbox" id="notice-pin-check" style="accent-color:var(--amb)"> 📌 상단 고정
+        </label>
+        <button class="notice-add-btn" onclick="addNotice()">＋ 공지 등록하기</button>
+      </div>
+    </div>
+    <div class="notice-list" id="notice-list"></div>
+  </div>
+</div>
+
+<div id="tab-account" class="sec">
+  <div class="panel">
+    <div class="ptitle">🏦 모임 회비 계좌 안내</div>
+    <div class="psub">아래 계좌 정보를 클릭하면 직접 수정할 수 있습니다.</div>
+    <div class="acc-card">
+      <div class="acc-logo">🏦</div>
+      <div class="acc-bank" contenteditable="true" onblur="scheduleSave()">국민은행</div>
+      <div class="acc-num" id="account-number" contenteditable="true" onblur="scheduleSave()">123456-78-901234</div>
+      <div class="acc-owner">예금주 : <span contenteditable="true" onblur="scheduleSave()">이라이프 (with 볼링클럽 총무)</span></div>
+      <button class="acc-copy-btn" onclick="copyAccount()">📋 계좌번호 복사하기</button>
+      <div class="acc-note" contenteditable="true" onblur="scheduleSave()">💡 회비 입금 안내
+· 매월 회비는 정해진 날짜까지 위 계좌로 입금 부탁드립니다.
+· 입금자명은 본인 성함으로 부탁드립니다.
+· 입금 확인 후 회원 명단 탭에서 완납으로 표시됩니다.</div>
+    </div>
+  </div>
+</div>
+
+<footer style="text-align:center;padding:16px 0 4px;font-size:10px;color:var(--t3)">
+  © 2026 메트라이프금융서비스 · with 볼링 클럽
+</footer>
+</div>
+
+<div class="mob-nav">
+  <div class="mtab active" id="m-tab-concept" onclick="goTab('tab-concept')"><span class="mi">✨</span>컨셉</div>
+  <div class="mtab" id="m-tab-values" onclick="goTab('tab-values')"><span class="mi">🏆</span>가치</div>
+  <div class="mtab" id="m-tab-members" onclick="goTab('tab-members')"><span class="mi">👥</span>명단</div>
+  <div class="mtab" id="m-tab-active" onclick="goTab('tab-active')"><span class="mi">📈</span>가동</div>
+  <div class="mtab" id="m-tab-ledger" onclick="goTab('tab-ledger')"><span class="mi">💰</span>장부</div>
+  <div class="mtab" id="m-tab-notice" onclick="goTab('tab-notice')"><span class="mi">📢</span>공지</div>
+  <div class="mtab" id="m-tab-account" onclick="goTab('tab-account')"><span class="mi">🏦</span>계좌</div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY = 'with-bowling-final-v2';
+const KO_DAYS = ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'];
+const KO_MONTHS = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+
+let STATE = {
+  clubName: 'with 볼링 클럽',
+  duesAmtStr: '30000',
+  members: [
+    { id:1, name:'김메트',   role:'명예 구단주', style:'클래식 직구',        avg:170, dues:'완납' },
+    { id:2, name:'박스트',   role:'동호회 회장', style:'파워 크랭커 (훅)',   avg:185, dues:'완납' },
+    { id:3, name:'이라이프', role:'총무/관리자', style:'스피닝 아대 볼러',   avg:160, dues:'완납' },
+    { id:4, name:'최달러',   role:'기술 감사',   style:'덤리스 양손볼러',    avg:155, dues:'완납' },
+    { id:5, name:'정변액',   role:'회원',        style:'백스핀 훅',          avg:145, dues:'완납' },
+    { id:6, name:'강종신',   role:'회원',        style:'스트레이트 슬라이더', avg:130, dues:'미납' },
+    { id:7, name:'유케어',   role:'회원',        style:'정밀 스페어 전문',   avg:125, dues:'완납' },
+    { id:8, name:'신스페어', role:'오락부장',    style:'라이트 롤 훅',       avg:110, dues:'미납' }
+  ],
+  duesState: {},
+  activeData: {},
+  ledgerRows: [],
+  notices: [
+    { id:1, text:'with 볼링 클럽 홈페이지가 오픈했습니다! 모두 환영합니다 🎳', pinned:true, date:'2026-06-08' }
+  ],
+  editableTexts: {}
+};
+STATE.members.forEach(m => {
+  STATE.duesState[m.id] = [0,0,0,0,0,0,0,0,0,0,0,0];
+  STATE.activeData[m.id] = { contracts: [] };
+});
+
+function collectState() {
+  STATE.clubName = (document.getElementById('club-name-input')?.value || '').trim();
+  STATE.duesAmtStr = (document.getElementById('dues-amount')?.textContent || '30000').replace(/,/g,'').trim();
+  STATE.editableTexts = {};
+  document.querySelectorAll('[contenteditable]').forEach((el, i) => {
+    const k = el.id || ('_ce' + i);
+    STATE.editableTexts[k] = el.innerHTML;
+  });
+  STATE.ledgerRows = [];
+  document.querySelectorAll('#ledger-tbody tr').forEach(tr => {
+    if (tr.dataset.fixed) return;
+    STATE.ledgerRows.push({
+      date: tr.cells[1]?.textContent.trim() || '',
+      type: tr.querySelector('.type-sel')?.value || '지출',
+      desc: tr.cells[3]?.textContent.trim() || '',
+      amt: parseInt(tr.querySelector('.ledger-amt')?.textContent.replace(/,/g,'') || '0') || 0,
+      note: tr.cells[5]?.textContent.trim() || ''
+    });
+  });
+}
+
+function saveData() {
+  collectState();
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(STATE));
+    setSaveText('자동 저장됨 ✓');
+  } catch(e) {
+    setSaveText('저장 실패');
+  }
+}
+
+function loadData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    if (d.clubName !== undefined) STATE.clubName = d.clubName;
+    if (d.duesAmtStr) STATE.duesAmtStr = d.duesAmtStr;
+    if (d.members && d.members.length) STATE.members = d.members;
+    if (d.duesState) STATE.duesState = d.duesState;
+    if (d.activeData) STATE.activeData = d.activeData;
+    if (d.ledgerRows) STATE.ledgerRows = d.ledgerRows;
+    if (d.notices) STATE.notices = d.notices;
+    if (d.editableTexts) STATE.editableTexts = d.editableTexts;
+    STATE.members.forEach(m => {
+      if (!STATE.duesState[m.id]) STATE.duesState[m.id] = [0,0,0,0,0,0,0,0,0,0,0,0];
+      if (!STATE.activeData[m.id]) STATE.activeData[m.id] = { contracts: [] };
+    });
+  } catch(e) {}
+}
+
+function restoreUI() {
+  const ci = document.getElementById('club-name-input');
+  if (ci && STATE.clubName) ci.value = STATE.clubName;
+  const rv = document.getElementById('dues-amount');
+  if (rv && STATE.duesAmtStr) rv.textContent = parseInt(STATE.duesAmtStr).toLocaleString();
+  if (STATE.editableTexts) {
+    document.querySelectorAll('[contenteditable]').forEach((el, i) => {
+      const k = el.id || ('_ce' + i);
+      if (STATE.editableTexts[k] !== undefined) el.innerHTML = STATE.editableTexts[k];
+    });
+  }
+  if (STATE.ledgerRows && STATE.ledgerRows.length) {
+    const tb = document.getElementById('ledger-tbody');
+    const fixed = tb.querySelector('[data-fixed]');
+    tb.innerHTML = ''; if (fixed) tb.appendChild(fixed);
+    STATE.ledgerRows.forEach((r, i) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = ledgerRowHTML(i + 2, r.date, r.type, r.desc, r.amt, r.note);
+      tb.appendChild(tr);
+    });
+  }
+}
+
+let saveTimer = null;
+function scheduleSave() { clearTimeout(saveTimer); saveTimer = setTimeout(saveData, 500); }
+function manualSave() { saveData(); showToast('✅ 저장 완료! 이 기기에 안전하게 보관됩니다'); }
+
+function tick() {
+  const n = new Date(), h = n.getHours(), m = n.getMinutes(), s = n.getSeconds();
+  const pad = v => v.toString().padStart(2, '0');
+  const hr = document.getElementById('hr-hand'); if(hr) hr.style.transform = `rotate(${h*30+m*.5}deg)`;
+  const mn = document.getElementById('mn-hand'); if(mn) mn.style.transform = `rotate(${m*6}deg)`;
+  const sc = document.getElementById('sc-hand'); if(sc) sc.style.transform = `rotate(${s*6}deg)`;
+  const dv = document.getElementById('digital-time'); if(dv) dv.textContent = pad(h)+':'+pad(m);
+  const yd = document.getElementById('day-name'); if(yd) yd.textContent = KO_DAYS[n.getDay()];
+  const dt = document.getElementById('date-str'); if(dt) dt.textContent = n.getFullYear()+'/'+(pad(n.getMonth()+1))+'/'+pad(n.getDate());
+  const hm = document.getElementById('hello-month'); if(hm) hm.textContent = KO_MONTHS[n.getMonth()];
+}
+function yearBarUpdate() {
+  const n = new Date();
+  const pct = Math.round((n - new Date(n.getFullYear(),0,1)) / (new Date(n.getFullYear()+1,0,1) - new Date(n.getFullYear(),0,1)) * 100);
+  const f = document.getElementById('yr-fill'); if(f) f.style.width = pct+'%';
+  const p = document.getElementById('yr-pct'); if(p) p.textContent = pct+'%';
+}
+tick(); yearBarUpdate(); setInterval(tick, 1000);
+
+function goTab(tabId) {
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.ntab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.mtab').forEach(b => b.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+  const pc = document.getElementById('btn-' + tabId); if(pc) pc.classList.add('active');
+  const mob = document.getElementById('m-' + tabId); if(mob) mob.classList.add('active');
+  if (tabId === 'tab-members') renderMembers();
+  else if (tabId === 'tab-active') renderActive();
+  else if (tabId === 'tab-ledger') { renderDuesGrid(); calcLedger(); }
+  else if (tabId === 'tab-notice') renderNotices();
+}
+
+function renderMembers() {
+  const tb = document.getElementById('members-tbody'); if(!tb) return; tb.innerHTML = '';
+  STATE.members.forEach((m, i) => {
+    const tr = document.createElement('tr'); tr.className = 'fdr';
+    tr.innerHTML = `
+      <td style="text-align:center;color:var(--t3);font-size:10px">${i+1}</td>
+      <td contenteditable="true" onblur="updateMemberField(${m.id},'name',this.textContent)" style="font-weight:700;color:var(--t1)">${m.name}</td>
+      <td contenteditable="true" onblur="updateMemberField(${m.id},'role',this.textContent)" style="color:var(--sage);font-weight:600">${m.role}</td>
+      <td contenteditable="true" onblur="updateMemberField(${m.id},'style',this.textContent)" style="color:var(--t2)">${m.style}</td>
+      <td style="text-align:center;font-family:var(--fm);font-weight:500" contenteditable="true" onblur="updateMemberField(${m.id},'avg',this.textContent,true)">${m.avg}</td>
+      <td style="text-align:center"><span class="badge ${m.dues==='완납'?'green':'red'}" onclick="toggleDues(${m.id})">${m.dues}</span></td>
+      <td style="text-align:center"><button class="dbtn" onclick="removeMember(${m.id})">×</button></td>`;
+    tb.appendChild(tr);
+  });
+  setText('dash-members', STATE.members.length);
+  const avg = STATE.members.length ? STATE.members.reduce((a,x) => a+x.avg, 0) / STATE.members.length : 0;
+  setText('avg-display', avg.toFixed(1));
+  setText('dash-avg', avg.toFixed(1));
+}
+function updateMemberField(id, key, val, isNum=false) {
+  const m = STATE.members.find(x => x.id === id); if(!m) return;
+  const parsed = isNum ? (parseInt(val.replace(/,/g,'')) || 0) : val.trim();
+  if (m[key] === parsed) return;
+  m[key] = parsed;
+  recalcAll(); if(key==='name') renderMembers(); scheduleSave();
+}
+function toggleDues(id) {
+  const m = STATE.members.find(x => x.id===id); if(!m) return;
+  m.dues = m.dues==='완납' ? '미납' : '완납';
+  renderMembers(); scheduleSave();
+}
+function addMember() {
+  const id = Date.now();
+  STATE.members.push({ id, name:'신규FP_'+(STATE.members.length+1), role:'FP', style:'직구', avg:120, dues:'미납' });
+  STATE.duesState[id] = [0,0,0,0,0,0,0,0,0,0,0,0];
+  STATE.activeData[id] = { contracts: [] };
+  recalcAll(); renderMembers(); scheduleSave();
+}
+function removeMember(id) {
+  const idx = STATE.members.findIndex(x => x.id===id); if(idx<0) return;
+  STATE.members.splice(idx, 1);
+  delete STATE.duesState[id]; delete STATE.activeData[id];
+  recalcAll(); renderMembers(); scheduleSave();
+}
+function clearMembers() {
+  if(!confirm('전체 명단을 삭제하시겠습니까?')) return;
+  STATE.members = []; STATE.duesState = {}; STATE.activeData = {};
+  recalcAll(); renderMembers(); scheduleSave();
+}
+
+function renderActive() {
+  const wrap = document.getElementById('active-blocks'); if(!wrap) return; wrap.innerHTML = '';
+  if (!STATE.members.length) {
+    wrap.innerHTML = '<div style="text-align:center;color:var(--t3);padding:24px;font-size:12px">회원 명단 탭에서 회원을 먼저 등록해주세요.</div>';
+    calcActiveSummary(); return;
+  }
+  STATE.members.forEach(m => {
+    if (!STATE.activeData[m.id]) STATE.activeData[m.id] = { contracts: [] };
+    const cs = STATE.activeData[m.id].contracts || [];
+    const mC = cs.filter(c=>c.type==='met'), oC = cs.filter(c=>c.type==='other'), nC = cs.filter(c=>c.type==='nonlife');
+    const mc = mC.reduce((a,c)=>a+(parseInt(c.cnt)||0),0), ms = mC.reduce((a,c)=>a+(parseInt(c.amt)||0),0);
+    const oc = oC.reduce((a,c)=>a+(parseInt(c.cnt)||0),0), os = oC.reduce((a,c)=>a+(parseInt(c.amt)||0),0);
+    const nc = nC.reduce((a,c)=>a+(parseInt(c.cnt)||0),0), ns = nC.reduce((a,c)=>a+(parseInt(c.amt)||0),0);
+    const total = ms+os+ns;
+    const contractsHTML = cs.map((c,ci) => `
+      <div class="cr">
+        <input class="ci" type="text" placeholder="상품명 (달러종신, 변액연금 등)" value="${c.name||''}" oninput="updateContract(${m.id},${ci},'name',this.value)">
+        <input class="ci mono" type="number" placeholder="건수" min="1" value="${c.cnt||''}" oninput="updateContract(${m.id},${ci},'cnt',this.value)">
+        <input class="ci mono" type="number" placeholder="금액(원)" min="0" value="${c.amt||''}" oninput="updateContract(${m.id},${ci},'amt',this.value)">
+        <button class="dbtn" onclick="removeContract(${m.id},${ci})">×</button>
+      </div>
+      <div class="cr-type">
+        <label><input type="radio" name="ct${m.id}_${ci}" value="met" ${c.type==='met'?'checked':''} onchange="updateContract(${m.id},${ci},'type','met')" style="accent-color:var(--sage)"><span style="color:var(--sage);font-weight:700">메트라이프</span></label>
+        <label><input type="radio" name="ct${m.id}_${ci}" value="other" ${c.type==='other'?'checked':''} onchange="updateContract(${m.id},${ci},'type','other')" style="accent-color:var(--lav)"><span style="color:var(--lav);font-weight:700">타생보</span></label>
+        <label><input type="radio" name="ct${m.id}_${ci}" value="nonlife" ${c.type==='nonlife'?'checked':''} onchange="updateContract(${m.id},${ci},'type','nonlife')" style="accent-color:var(--amb)"><span style="color:var(--amb);font-weight:700">타손보</span></label>
+      </div>`).join('');
+    const block = document.createElement('div'); block.className = 'amb';
+    block.innerHTML = `
+      <div class="amb-hdr" onclick="toggleBlock(${m.id})">
+        <div class="amb-name">
+          <span>${m.name}</span>
+          <span class="amb-tag ${mc>0?'s':'off'}">메트 ${mc}건</span>
+          <span class="amb-tag ${oc>0?'l':'off'}">타생 ${oc}건</span>
+          <span class="amb-tag ${nc>0?'a':'off'}">타손 ${nc}건</span>
+        </div>
+        <div class="amb-sum">
+          <span class="amb-total" style="color:${total>0?'var(--t1)':'var(--t3)'}">₩${total.toLocaleString()}</span>
+          <span class="chev" id="chev-${m.id}">▼</span>
+        </div>
+      </div>
+      <div class="amb-body" id="abody-${m.id}">${contractsHTML}
+        <div style="margin-top:8px">
+          <button class="add-c-btn" onclick="addContract(${m.id},'met')">＋ 메트라이프 추가</button>
+          <button class="add-c-btn" style="color:var(--lav)" onclick="addContract(${m.id},'other')">＋ 타생보 추가</button>
+          <button class="add-c-btn" style="color:var(--amb)" onclick="addContract(${m.id},'nonlife')">＋ 타손보 추가</button>
+        </div>
+      </div>`;
+    wrap.appendChild(block);
+  });
+  calcActiveSummary();
+}
+function toggleBlock(id) {
+  const body = document.getElementById('abody-'+id), chev = document.getElementById('chev-'+id);
+  if(!body) return;
+  const open = body.style.display === 'block';
+  body.style.display = open ? 'none' : 'block';
+  if(chev) chev.classList.toggle('open', !open);
+}
+function addContract(id, type) {
+  if(!STATE.activeData[id]) STATE.activeData[id] = { contracts: [] };
+  STATE.activeData[id].contracts.push({ type, name:'', cnt:1, amt:0 });
+  renderActive();
+  const b = document.getElementById('abody-'+id); if(b) b.style.display = 'block';
+  const h = document.getElementById('chev-'+id); if(h) h.classList.add('open');
+}
+function removeContract(id, ci) {
+  if(!STATE.activeData[id]) return;
+  STATE.activeData[id].contracts.splice(ci, 1);
+  renderActive(); scheduleSave();
+}
+function updateContract(id, ci, key, val) {
+  if(!STATE.activeData[id]||!STATE.activeData[id].contracts[ci]) return;
+  if(key==='cnt'||key==='amt') STATE.activeData[id].contracts[ci][key] = parseInt(val)||0;
+  else STATE.activeData[id].contracts[ci][key] = val;
+  calcActiveSummary(); scheduleSave();
+}
+function calcActiveSummary() {
+  let mc=0,ms=0,oc=0,os=0,nc=0,ns=0,active=0;
+  STATE.members.forEach(m => {
+    const cs = (STATE.activeData[m.id]||{}).contracts||[];
+    const mCnt = cs.filter(c=>c.type==='met').reduce((a,c)=>a+(parseInt(c.cnt)||0),0);
+    const oCnt = cs.filter(c=>c.type==='other').reduce((a,c)=>a+(parseInt(c.cnt)||0),0);
+    const nCnt = cs.filter(c=>c.type==='nonlife').reduce((a,c)=>a+(parseInt(c.cnt)||0),0);
+    mc+=mCnt; ms+=cs.filter(c=>c.type==='met').reduce((a,c)=>a+(parseInt(c.amt)||0),0);
+    oc+=oCnt; os+=cs.filter(c=>c.type==='other').reduce((a,c)=>a+(parseInt(c.amt)||0),0);
+    nc+=nCnt; ns+=cs.filter(c=>c.type==='nonlife').reduce((a,c)=>a+(parseInt(c.amt)||0),0);
+    if(mCnt>0||oCnt>0||nCnt>0) active++;
+  });
+  setText('sum-met-cnt', mc); setText('sum-met-amt', ms.toLocaleString());
+  setText('sum-oth-cnt', oc); setText('sum-oth-amt', os.toLocaleString());
+  setText('sum-non-cnt', nc); setText('sum-non-amt', ns.toLocaleString());
+  const rate = STATE.members.length ? Math.round(active/STATE.members.length*100) : 0;
+  setText('dash-active', rate+'%'); setText('dash-active-sub', active+'명 가동');
+  const bar = document.getElementById('dash-active-bar'); if(bar) bar.style.width = rate+'%';
+}
+
+function getDuesAmount() { return parseInt((document.getElementById('dues-amount')||{}).textContent.replace(/,/g,'')) || 30000; }
+function renderDuesGrid() {
+  const tb = document.getElementById('dues-tbody'); if(!tb) return; tb.innerHTML = '';
+  const amt = getDuesAmount();
+  STATE.members.forEach(m => {
+    if (!STATE.duesState[m.id]) STATE.duesState[m.id] = [0,0,0,0,0,0,0,0,0,0,0,0];
+    const arr = STATE.duesState[m.id], paid = arr.reduce((a,v)=>a+v, 0);
+    let cells = '';
+    for (let i = 0; i < 12; i++) {
+      const isPaid = arr[i] === 1;
+      cells += `<td class="dues-cell ${isPaid?'paid':'unpaid'}" onclick="toggleDuesCell(${m.id},${i},this)">${isPaid?'O':'X'}</td>`;
+    }
+    tb.innerHTML += `<tr><td class="ncd">${m.name}</td>${cells}<td class="dues-total">₩${(paid*amt).toLocaleString()}</td></tr>`;
+  });
+  calcLedger();
+}
+function toggleDuesCell(id, idx, el) {
+  if (!STATE.duesState[id]) STATE.duesState[id] = [0,0,0,0,0,0,0,0,0,0,0,0];
+  const wasPaid = STATE.duesState[id][idx] === 1;
+  STATE.duesState[id][idx] = wasPaid ? 0 : 1;
+  el.className = 'dues-cell ' + (wasPaid ? 'unpaid' : 'paid');
+  el.textContent = wasPaid ? 'X' : 'O';
+  const paid = STATE.duesState[id].reduce((a,v)=>a+v, 0);
+  el.closest('tr').querySelector('.dues-total').textContent = '₩' + (paid * getDuesAmount()).toLocaleString();
+  calcLedger(); scheduleSave();
+}
+
+function calcLedger() {
+  const amt = getDuesAmount(); let autoSum = 0;
+  for (const id in STATE.duesState) autoSum += (STATE.duesState[id]||[]).reduce((a,v)=>a+v,0) * amt;
+  setText('auto-dues-cell', '₩' + autoSum.toLocaleString());
+  let income = autoSum, expense = 0;
+  document.querySelectorAll('#ledger-tbody tr').forEach(tr => {
+    if (tr.dataset.fixed) return;
+    const sel = tr.querySelector('.type-sel'), amtEl = tr.querySelector('.ledger-amt');
+    if (!sel||!amtEl) return;
+    const v = parseInt(amtEl.textContent.replace(/,/g,'')) || 0;
+    if (sel.value === '입금') { income+=v; amtEl.style.color='var(--sage)'; }
+    else { expense+=v; amtEl.style.color='var(--pink)'; }
+  });
+  const balance = income - expense;
+  setText('ledger-income', '₩'+income.toLocaleString());
+  setText('ledger-expense', '₩'+expense.toLocaleString());
+  setText('ledger-balance', '₩'+balance.toLocaleString());
+  setText('dash-balance', '₩'+balance.toLocaleString());
+}
+function ledgerRowHTML(num, date, type, desc, amt, note) {
+  const n = new Date(), pad = v=>v.toString().padStart(2,'0');
+  const today = date || (n.getFullYear()+'-'+pad(n.getMonth()+1)+'-'+pad(n.getDate()));
+  return `<td style="text-align:center;color:var(--t3);font-size:10px">${num}</td>
+    <td contenteditable="true" onblur="scheduleSave()" style="font-size:11px">${today}</td>
+    <td style="text-align:center">
+      <select class="type-sel" onchange="scheduleSave();calcLedger()">
+        <option value="지출" ${(type||'지출')==='지출'?'selected':''}>지출</option>
+        <option value="입금" ${(type||'지출')==='입금'?'selected':''}>입금</option>
+      </select>
+    </td>
+    <td contenteditable="true" onblur="scheduleSave()" style="font-size:11px">${desc||'거래 내역 기입'}</td>
+    <td style="text-align:right">₩<span contenteditable="true" class="ledger-amt"
+      onblur="scheduleSave();calcLedger()"
+      style="font-family:var(--fm);font-weight:700;color:var(--pink)">${amt||0}</span></td>
+    <td contenteditable="true" onblur="scheduleSave()" class="lm">${note||'비고'}</td>
+    <td style="text-align:center"><button class="dbtn" onclick="removeLedgerRow(this)">×</button></td>`;
+}
+function addLedgerRow() {
+  const tb = document.getElementById('ledger-tbody');
+  const num = tb.children.length + 1;
+  const tr = document.createElement('tr');
+  tr.innerHTML = ledgerRowHTML(num, '', '지출', '', 0, '');
+  tb.appendChild(tr); calcLedger();
+}
+function removeLedgerRow(btn) {
+  btn.closest('tr').remove();
+  document.querySelectorAll('#ledger-tbody tr').forEach((tr,i) => {
+    const c = tr.querySelector('td:first-child');
+    if (c && !tr.dataset.fixed) c.textContent = i + 1;
+  });
+  calcLedger(); scheduleSave();
+}
+
+function renderNotices() {
+  const wrap = document.getElementById('notice-list'); if(!wrap) return;
+  wrap.innerHTML = '';
+  if (!STATE.notices || !STATE.notices.length) {
+    wrap.innerHTML = '<div class="notice-empty">아직 등록된 공지사항이 없습니다.</div>';
+    return;
+  }
+  const sorted = [...STATE.notices].sort((a,b) => (b.pinned?1:0) - (a.pinned?1:0) || b.id - a.id);
+  sorted.forEach(n => {
+    const card = document.createElement('div');
+    card.className = 'notice-card' + (n.pinned ? ' pinned' : '');
+    card.innerHTML = `
+      <button class="notice-del" onclick="removeNotice(${n.id})">×</button>
+      <div class="notice-hdr">
+        ${n.pinned ? '<span class="notice-pin">📌 고정 공지</span>' : '<span></span>'}
+        <span class="notice-date">${n.date||''}</span>
+      </div>
+      <div class="notice-body" contenteditable="true" onblur="updateNoticeText(${n.id}, this.textContent)">${n.text}</div>`;
+    wrap.appendChild(card);
+  });
+}
+function addNotice() {
+  const input = document.getElementById('notice-input');
+  const text = input.value.trim();
+  if (!text) { showToast('❌ 공지 내용을 입력해주세요'); return; }
+  const pinned = document.getElementById('notice-pin-check').checked;
+  const n = new Date(), pad = v=>v.toString().padStart(2,'0');
+  const date = n.getFullYear()+'-'+pad(n.getMonth()+1)+'-'+pad(n.getDate());
+  STATE.notices.push({ id: Date.now(), text, pinned, date });
+  input.value = '';
+  document.getElementById('notice-pin-check').checked = false;
+  renderNotices(); scheduleSave();
+  showToast('✅ 공지사항이 등록되었습니다');
+}
+function updateNoticeText(id, newText) {
+  const n = STATE.notices.find(x => x.id === id); if(!n) return;
+  n.text = newText.trim();
+  scheduleSave();
+}
+function removeNotice(id) {
+  if(!confirm('이 공지사항을 삭제하시겠습니까?')) return;
+  STATE.notices = STATE.notices.filter(x => x.id !== id);
+  renderNotices(); scheduleSave();
+}
+
+function copyAccount() {
+  const acc = document.getElementById('account-number').textContent.trim();
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(acc)
+      .then(() => showToast('💳 계좌번호가 복사되었습니다!'))
+      .catch(() => fallbackCopy(acc));
+  } else fallbackCopy(acc);
+}
+
+function recalcAll() {
+  const avg = STATE.members.length ? STATE.members.reduce((a,m)=>a+m.avg,0)/STATE.members.length : 0;
+  setText('avg-display', avg.toFixed(1));
+  setText('dash-avg', avg.toFixed(1));
+  setText('dash-members', STATE.members.length);
+  calcActiveSummary();
+  calcLedger();
+}
+
+function setText(id, val) { const el = document.getElementById(id); if(el) el.textContent = val; }
+function setSaveText(msg) { const t = document.getElementById('save-text'); if(t) t.textContent = msg; }
+function setShareUrl() { const el = document.getElementById('share-url'); if(el) el.textContent = window.location.href; }
+function copyUrl() {
+  const url = window.location.href;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url)
+      .then(() => showToast('🔗 링크 복사 완료! 카카오톡 단체방에 공유하세요'))
+      .catch(() => fallbackCopy(url));
+  } else fallbackCopy(url);
+}
+function fallbackCopy(text) {
+  const inp = document.createElement('textarea');
+  inp.value = text; inp.style.cssText = 'position:fixed;opacity:0';
+  document.body.appendChild(inp); inp.select();
+  document.execCommand('copy'); document.body.removeChild(inp);
+  showToast('✅ 복사 완료!');
+}
+function showToast(msg) {
+  const t = document.getElementById('toast'); if(!t) return;
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+loadData();
+restoreUI();
+setShareUrl();
+recalcAll();
+renderMembers();
+</script>
+</body>
+</html>
