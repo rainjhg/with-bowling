@@ -260,6 +260,9 @@ select{background:var(--bg2);border:none;box-shadow:var(--nm-in);color:var(--t1)
   @page{size:A4;margin:12mm}
 }
 </style>
+<!-- Firebase v10 SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 </head>
 <body>
 <div id="app">
@@ -281,8 +284,12 @@ select{background:var(--bg2);border:none;box-shadow:var(--nm-in);color:var(--t1)
   </div>
 </header>
 
-<div class="info-banner">
-  💡 <b>이용 안내</b> — 이 페이지는 이 기기(브라우저)에 자동 저장됩니다. 총무님이 입력 후 파일을 다시 GitHub에 올리면 모든 회원이 최신 내용을 볼 수 있어요. 평소엔 이 링크로 접속해 명단·실적·공지를 확인하세요.
+<div class="info-banner" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
+  <span>☁️ <b>클라우드 실시간 동기화</b> — 누가 수정해도 링크를 공유한 모든 회원에게 즉시 반영됩니다.</span>
+  <span id="fb-status" style="display:inline-flex;align-items:center;gap:6px;padding:5px 13px;border-radius:20px;box-shadow:var(--nm-in);background:var(--bg2);font-size:10px;font-weight:700;color:var(--t2);">
+    <span id="fb-dot" style="width:8px;height:8px;border-radius:50%;background:var(--amb);animation:pulse 1s infinite;flex-shrink:0;display:inline-block;"></span>
+    <span id="fb-txt">연결 중…</span>
+  </span>
 </div>
 
 <div class="share-banner">
@@ -541,7 +548,39 @@ select{background:var(--bg2);border:none;box-shadow:var(--nm-in);color:var(--t1)
 <div class="toast" id="toast"></div>
 
 <script>
-const STORAGE_KEY = 'with-bowling-final-v2';
+/* ════════════════════════════════════════════════════
+   🔥 FIREBASE 설정값 — Firebase 콘솔에서 복사해서 여기에 붙여넣으세요
+   ════════════════════════════════════════════════════ */
+const FB_CONFIG = {
+  apiKey:            "AIzaSyDRI8dL06yooOzXDCLXioWZyxSOCIyA9P8",
+  authDomain:        "with-bowling-6d90c.firebaseapp.com",
+  projectId:         "with-bowling-6d90c",
+  storageBucket:     "with-bowling-6d90c.firebasestorage.app",
+  messagingSenderId: "815279387179",
+  appId:             "1:815279387179:web:3121dd7a2beeb123a6b06e"
+};
+/* ════════════════════════════════════════════════════ */
+
+/* Firebase 초기화 */
+firebase.initializeApp(FB_CONFIG);
+const db = firebase.firestore();
+const DOC = db.doc('bowling/with-club-data');
+
+/* 연결 상태 표시 */
+function fbDot(state) {
+  const dot = document.getElementById('fb-dot');
+  const txt = document.getElementById('fb-txt');
+  if (!dot || !txt) return;
+  const m = {
+    ok:   ['#7fa898', '🟢 실시간 동기화 중'],
+    err:  ['#e88fa0', '⚠️ 연결 실패'],
+    sync: ['#d4a04a', '저장 중…'],
+    load: ['#9b90c2', '불러오는 중…']
+  };
+  dot.style.background = m[state][0];
+  txt.textContent       = m[state][1];
+}
+
 const KO_DAYS = ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'];
 const KO_MONTHS = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
 
@@ -592,34 +631,67 @@ function collectState() {
   });
 }
 
-function saveData() {
+let _saving = false;
+async function saveData() {
   collectState();
+  if (_saving) return;
+  _saving = true;
+  setSaveText('저장 중…');
+  fbDot('sync');
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(STATE));
-    setSaveText('자동 저장됨 ✓');
+    await DOC.set(STATE);
+    setSaveText('☁️ 저장됨 ✓');
   } catch(e) {
-    setSaveText('저장 실패');
+    setSaveText('⚠️ 저장 실패');
+    fbDot('err');
+    console.error('Firebase 저장 오류:', e);
+  } finally {
+    _saving = false;
   }
 }
 
+/* Firebase 스냅샷 데이터를 STATE에 적용 */
+function applySnapshot(d) {
+  if (!d) return;
+  if (d.clubName   !== undefined) STATE.clubName   = d.clubName;
+  if (d.duesAmtStr !== undefined) STATE.duesAmtStr = d.duesAmtStr;
+  if (d.members    && d.members.length) STATE.members = d.members;
+  if (d.duesState  !== undefined) STATE.duesState  = d.duesState;
+  if (d.activeData !== undefined) STATE.activeData = d.activeData;
+  if (d.ledgerRows !== undefined) STATE.ledgerRows = d.ledgerRows;
+  if (d.notices    !== undefined) STATE.notices    = d.notices;
+  if (d.editableTexts !== undefined) STATE.editableTexts = d.editableTexts;
+  STATE.members.forEach(m => {
+    if (!STATE.duesState[m.id])  STATE.duesState[m.id]  = [0,0,0,0,0,0,0,0,0,0,0,0];
+    if (!STATE.activeData[m.id]) STATE.activeData[m.id] = { contracts: [] };
+  });
+}
+
+/* UI 전체 다시 그리기 */
+function fullRedraw() {
+  restoreUI();
+  recalcAll();
+  renderMembers();
+  renderActive();
+  renderDuesGrid();
+  renderNotices();
+  setShareUrl();
+}
+
+/* Firebase 실시간 리스너 — 변경 즉시 모든 기기에 자동 반영 */
 function loadData() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return;
-    const d = JSON.parse(raw);
-    if (d.clubName !== undefined) STATE.clubName = d.clubName;
-    if (d.duesAmtStr) STATE.duesAmtStr = d.duesAmtStr;
-    if (d.members && d.members.length) STATE.members = d.members;
-    if (d.duesState) STATE.duesState = d.duesState;
-    if (d.activeData) STATE.activeData = d.activeData;
-    if (d.ledgerRows) STATE.ledgerRows = d.ledgerRows;
-    if (d.notices) STATE.notices = d.notices;
-    if (d.editableTexts) STATE.editableTexts = d.editableTexts;
-    STATE.members.forEach(m => {
-      if (!STATE.duesState[m.id]) STATE.duesState[m.id] = [0,0,0,0,0,0,0,0,0,0,0,0];
-      if (!STATE.activeData[m.id]) STATE.activeData[m.id] = { contracts: [] };
-    });
-  } catch(e) {}
+  fbDot('load');
+  DOC.onSnapshot(snap => {
+    if (snap.exists) applySnapshot(snap.data());
+    fullRedraw();
+    fbDot('ok');
+    setSaveText('☁️ 저장됨 ✓');
+  }, err => {
+    console.error('Firebase 오류:', err);
+    fbDot('err');
+    setSaveText('⚠️ 오프라인');
+    fullRedraw(); /* 기본 STATE로 화면은 표시 */
+  });
 }
 
 function restoreUI() {
@@ -647,7 +719,7 @@ function restoreUI() {
 
 let saveTimer = null;
 function scheduleSave() { clearTimeout(saveTimer); saveTimer = setTimeout(saveData, 500); }
-function manualSave() { saveData(); showToast('✅ 저장 완료! 이 기기에 안전하게 보관됩니다'); }
+function manualSave() { saveData(); showToast('☁️ 클라우드 저장 중… 모든 회원에게 즉시 반영됩니다!'); }
 
 function tick() {
   const n = new Date(), h = n.getHours(), m = n.getMinutes(), s = n.getSeconds();
@@ -994,11 +1066,8 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 3000);
 }
 
+/* Firebase 리스너 시작 — 데이터 도착 시 fullRedraw() 자동 실행 */
 loadData();
-restoreUI();
-setShareUrl();
-recalcAll();
-renderMembers();
 </script>
 </body>
 </html>
